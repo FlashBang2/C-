@@ -2,6 +2,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "shader.h"
+#include "VAO.h"
+#include "VBO.h"
+#include "EABO.h"
+
 int main() 
 {
 	glfwInit();
