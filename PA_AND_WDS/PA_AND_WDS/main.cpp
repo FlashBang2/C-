@@ -1,7 +1,8 @@
 #include <iostream>
-using namespace std;
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
-int main() {
-	cout << "Hello World! 2";
+int main() 
+{
 	return 0;
 }
