@@ -2,12 +2,13 @@
 #define EABO_CLASS_H
 
 #include <glad/glad.h>
+#include <vector>
 
 class EABO
 {
 	public:
 		GLuint ID;
-		EABO(GLuint* indices, GLsizeiptr size);
+		EABO(std::vector<GLuint>& indices);
 
 		void Bind();
 		void Unbind();
