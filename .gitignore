@@ -1,0 +1,75 @@
+﻿################################################################################
+# Ten plik .gitignore został utworzony automatycznie przez Microsoft(R) Visual Studio.
+################################################################################
+
+/Conway's Game of Life/.vs/Conway's Game of Life/v17/Browse.VC.opendb
+/Conway's Game of Life/.vs/Conway's Game of Life/v17/Browse.VC.db-wal
+/Conway's Game of Life/.vs/Conway's Game of Life/v17/Browse.VC.db-shm
+/Conway's Game of Life/.vs/Conway's Game of Life/v17/Browse.VC.db
+/Conway's Game of Life/.vs/Conway's Game of Life/v17/.suo
+/Conway's Game of Life/.vs/Conway's Game of Life/v17
+/Conway's Game of Life/.vs/Conway's Game of Life/FileContentIndex/read.lock
+/Conway's Game of Life/.vs/Conway's Game of Life/FileContentIndex/fb41c8e5-888e-4aeb-8b3e-53c17d9c0137.vsidx
+/Conway's Game of Life/.vs/Conway's Game of Life/FileContentIndex/d6b115e1-ba56-4e71-be1b-1cac105e5212.vsidx
+/Conway's Game of Life/.vs/Conway's Game of Life/FileContentIndex/9b719cb1-ce6a-4e73-a362-0aeff3cc004b.vsidx
+/Conway's Game of Life/.vs/Conway's Game of Life/FileContentIndex
+/Conway's Game of Life/.vs/Conway's Game of Life
+/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGeneticAlgorythim.pdb
+/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGeneticAlgorythim.exe
+/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim.sln
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/vc143.pdb
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/vc143.idb
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGeneticAlgorythim.log
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGeneticAlgorythim.ilk
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGeneticAlgorythim.exe.recipe
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGen.45710015.tlog/link.write.1.tlog
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGen.45710015.tlog/link.read.1.tlog
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGen.45710015.tlog/link.command.1.tlog
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGen.45710015.tlog/CL.write.1.tlog
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGen.45710015.tlog/CL.read.1.tlog
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGen.45710015.tlog/CL.command.1.tlog
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGen.45710015.tlog/basicGeneticAlgorythim.lastbuildstate
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/basicGen.45710015.tlog
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug/base.obj
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/x64/Debug
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim.vcxproj.user
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim.vcxproj.filters
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim.vcxproj
+/basicGeneticAlgorythim/basicGeneticAlgorythim/basicGeneticAlgorythim
+/basicGeneticAlgorythim/basicGeneticAlgorythim/.vs/basicGeneticAlgorythim/v17/ipch/AutoPCH/88c7f343f6a7ea17/BASE.ipch
+/basicGeneticAlgorythim/basicGeneticAlgorythim/.vs/basicGeneticAlgorythim/v17/ipch/AutoPCH/88c7f343f6a7ea17
+/basicGeneticAlgorythim/basicGeneticAlgorythim/.vs/basicGeneticAlgorythim/v17/Browse.VC.db
+/basicGeneticAlgorythim/basicGeneticAlgorythim/.vs/basicGeneticAlgorythim/v17/.suo
+/basicGeneticAlgorythim/basicGeneticAlgorythim/.vs/basicGeneticAlgorythim/v17
+/basicGeneticAlgorythim/basicGeneticAlgorythim/.vs/basicGeneticAlgorythim/FileContentIndex/read.lock
+/basicGeneticAlgorythim/basicGeneticAlgorythim/.vs/basicGeneticAlgorythim/FileContentIndex/c82d3092-ba9b-4111-ad11-764155233767.vsidx
+/basicGeneticAlgorythim/basicGeneticAlgorythim/.vs/basicGeneticAlgorythim/FileContentIndex/3968cd9b-13ae-468d-b67a-02ca87212a04.vsidx
+/basicGeneticAlgorythim/basicGeneticAlgorythim/.vs/basicGeneticAlgorythim/FileContentIndex/29c3a2b1-8cae-459f-b6d1-336c19a5ce27.vsidx
+/basicGeneticAlgorythim/basicGeneticAlgorythim/.vs/basicGeneticAlgorythim/FileContentIndex
+/basicGeneticAlgorythim/basicGeneticAlgorythim/.vs/basicGeneticAlgorythim
+/basicGeneticAlgorythim/basicGeneticAlgorythim
+/.vs/VSWorkspaceState.json
+/.vs/tasks.vs.json
+/.vs/slnx.sqlite
+/.vs/ProjectSettings.json
+/.vs/Cpp/v17/ipch/AutoPCH/ec2586807bbbcc64/BASE.ipch
+/.vs/Cpp/v17/ipch/AutoPCH/ec2586807bbbcc64
+/.vs/Cpp/v17/ipch/AutoPCH/6f5d79f26f8dab7a/BASE.ipch
+/.vs/Cpp/v17/ipch/AutoPCH/6f5d79f26f8dab7a
+/.vs/Cpp/v17/ipch/AutoPCH/6cb546ee8aaa1f96/BASE.ipch
+/.vs/Cpp/v17/ipch/AutoPCH/6cb546ee8aaa1f96
+/.vs/Cpp/v17/ipch/AutoPCH
+/.vs/Cpp/v17/Browse.VC.db
+/.vs/Cpp/v17/.suo
+/.vs/Cpp/v17
+/.vs/Cpp/FileContentIndex/read.lock
+/.vs/Cpp/FileContentIndex/b0ec9903-f1b2-4461-a65c-4275e6d69be9.vsidx
+/.vs/Cpp/FileContentIndex/a970f872-460f-4d92-9f1b-5606406c821e.vsidx
+/.vs/Cpp/FileContentIndex/9783ea40-747d-456a-aeb7-dfbef4fc65ef.vsidx
+/.vs/Cpp/FileContentIndex/6c29a242-cb98-4abe-a418-2eade54e1401.vsidx
+/.vs/Cpp/FileContentIndex
+/.vs/Cpp/config/applicationhost.config
+/.vs/Cpp/config
+/.vs/Cpp
+/.vs
