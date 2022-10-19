@@ -71,20 +71,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\macon\source\repos\Cpp\PA_AND_WDS\PA_AND_WDS\libraries\import;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\macon\source\repos\Cpp\PA_AND_WDS\PA_AND_WDS\libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)PA_AND_WDS\libraries\import;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)PA_AND_WDS\libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\macon\source\repos\Cpp\PA_AND_WDS\PA_AND_WDS\libraries\import;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\macon\source\repos\Cpp\PA_AND_WDS\PA_AND_WDS\libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)PA_AND_WDS\libraries\import;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)PA_AND_WDS\libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\macon\source\repos\Cpp\PA_AND_WDS\PA_AND_WDS\libraries\import;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\macon\source\repos\Cpp\PA_AND_WDS\PA_AND_WDS\libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)PA_AND_WDS\libraries\import;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)PA_AND_WDS\libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\macon\source\repos\Cpp\PA_AND_WDS\PA_AND_WDS\libraries\import;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\macon\source\repos\Cpp\PA_AND_WDS\PA_AND_WDS\libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)PA_AND_WDS\libraries\import;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)PA_AND_WDS\libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,6 +97,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <HeapReserveSize>60000000</HeapReserveSize>
+      <HeapCommitSize>60000000</HeapCommitSize>
+      <StackReserveSize>60000000</StackReserveSize>
+      <StackCommitSize>60000000</StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -114,6 +118,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <HeapReserveSize>60000000</HeapReserveSize>
+      <HeapCommitSize>60000000</HeapCommitSize>
+      <StackReserveSize>60000000</StackReserveSize>
+      <StackCommitSize>60000000</StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -127,6 +135,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <HeapReserveSize>60000000</HeapReserveSize>
+      <HeapCommitSize>60000000</HeapCommitSize>
+      <StackReserveSize>60000000</StackReserveSize>
+      <StackCommitSize>60000000</StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,12 +156,19 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <HeapReserveSize>60000000</HeapReserveSize>
+      <HeapCommitSize>60000000</HeapCommitSize>
+      <StackReserveSize>60000000</StackReserveSize>
+      <StackCommitSize>60000000</StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="EABO.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="model.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="texture.cpp" />
@@ -157,11 +176,14 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="EABO.h" />
     <ClInclude Include="libraries\import\glad\glad.h" />
     <ClInclude Include="libraries\import\GLFW\glfw3.h" />
     <ClInclude Include="libraries\import\GLFW\glfw3native.h" />
     <ClInclude Include="libraries\import\KHR\khrplatform.h" />
+    <ClInclude Include="mesh.h" />
+    <ClInclude Include="model.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="VAO.h" />
@@ -170,6 +192,8 @@
   <ItemGroup>
     <None Include="default.frag" />
     <None Include="default.vert" />
+    <None Include="light.frag" />
+    <None Include="light.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
