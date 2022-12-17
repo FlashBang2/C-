@@ -69,15 +69,15 @@
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 6226,
+            "count" : 6231,
             "max" : [
-                2.550041675567627,
-                2.6000001430511475,
-                2.550042152404785
+                2.5500411987304688,
+                2.5990326404571533,
+                2.5500423908233643
             ],
             "min" : [
-                -2.5500407218933105,
-                -2.6000001430511475,
+                -2.5500411987304688,
+                -2.6009676456451416,
                 -2.550041913986206
             ],
             "type" : "VEC3"
@@ -85,13 +85,13 @@
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 6226,
+            "count" : 6231,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
             "componentType" : 5126,
-            "count" : 6226,
+            "count" : 6231,
             "type" : "VEC2"
         },
         {
@@ -104,23 +104,23 @@
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 74712,
+            "byteLength" : 74772,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 74712,
-            "byteOffset" : 74712
+            "byteLength" : 74772,
+            "byteOffset" : 74772
         },
         {
             "buffer" : 0,
-            "byteLength" : 49808,
-            "byteOffset" : 149424
+            "byteLength" : 49848,
+            "byteOffset" : 149544
         },
         {
             "buffer" : 0,
             "byteLength" : 12474,
-            "byteOffset" : 199232
+            "byteOffset" : 199392
         }
     ],
     "samplers" : [
@@ -131,7 +131,7 @@
     ],
     "buffers" : [
         {
-            "byteLength" : 211708,
+            "byteLength" : 211868,
             "uri" : "hive.bin"
         }
     ]
