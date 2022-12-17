@@ -51,6 +51,8 @@ int main()
 	Model modelFlower(modelFlowerPath.c_str());
 	Model modelHive(modelHivePath.c_str());
 
+	glm::vec3 beeTrajectory = glm::vec3(0.0f, 0.0f, 0.0f);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -61,9 +63,11 @@ int main()
 
 		camera.updateMatrix(45.0f, 0.1f, 100.0f);
 
-		modelBee.Draw(shaderProgram, camera);
-		modelFlower.Draw(shaderProgram, camera);
+		modelBee.Draw(shaderProgram, camera, beeTrajectory);
+		modelFlower.Draw(shaderProgram, camera,glm::vec3(30.0f, 30.0f, 0.0f));
 		modelHive.Draw(shaderProgram, camera);
+
+		beeTrajectory[0] += 0.01f;
 
 		glfwSwapBuffers(window);
 

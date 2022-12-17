@@ -32,6 +32,7 @@ void Mesh::Draw
 	glm::vec3 scale
 )
 {
+
 	shader.Activate();
 	VAO.Bind();
 
