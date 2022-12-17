@@ -52,6 +52,12 @@ int main()
 	Model modelHive(modelHivePath.c_str());
 
 	glm::vec3 beeTrajectory = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::quat beeRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+	
+	float XDegrees = 0.0f, YDegrees = 5.0f, ZDegrees = 5.0f;
+	beeRotation = glm::rotate(beeRotation, XDegrees, glm::vec3(1.0f, 0.0f, 0.0f));		//X
+	beeRotation = glm::rotate(beeRotation, YDegrees, glm::vec3(0.0f, 1.0f, 0.0f));		//Y
+	beeRotation = glm::rotate(beeRotation, ZDegrees, glm::vec3(0.0f, 0.0f, 1.0f));		//Z
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -63,12 +69,22 @@ int main()
 
 		camera.updateMatrix(45.0f, 0.1f, 100.0f);
 
-		modelBee.Draw(shaderProgram, camera, beeTrajectory);
+		modelBee.Draw(shaderProgram, camera, beeTrajectory, beeRotation, glm::vec3(0.25f,0.25f,0.25f));
 		modelFlower.Draw(shaderProgram, camera,glm::vec3(30.0f, 30.0f, 0.0f));
 		modelHive.Draw(shaderProgram, camera);
 
 		beeTrajectory[0] += 0.01f;
+		beeTrajectory[1] -= 0.001f;
+		beeTrajectory[2] -= 0.005f;
 
+		/*if (ZDegrees > 0.02f) {
+			ZDegrees -= 0.02f;
+			ZDegrees += 0.0001f;
+		}
+		else {
+			ZDegrees += 0.0001f;
+		}*/
+		
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
