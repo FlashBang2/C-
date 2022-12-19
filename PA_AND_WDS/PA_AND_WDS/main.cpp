@@ -54,10 +54,13 @@ int main()
 	glm::vec3 beeTrajectory = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::quat beeRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 	
-	float XDegrees = 0.0f, YDegrees = 5.0f, ZDegrees = 5.0f;
+	float XDegrees = -0.10f, YDegrees = 0.10f, ZDegrees = -20.0f;
 	beeRotation = glm::rotate(beeRotation, XDegrees, glm::vec3(1.0f, 0.0f, 0.0f));		//X
 	beeRotation = glm::rotate(beeRotation, YDegrees, glm::vec3(0.0f, 1.0f, 0.0f));		//Y
 	beeRotation = glm::rotate(beeRotation, ZDegrees, glm::vec3(0.0f, 0.0f, 1.0f));		//Z
+
+	float counter = 0.0f;
+	float multiplier = 10.0f;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -70,20 +73,40 @@ int main()
 		camera.updateMatrix(45.0f, 0.1f, 100.0f);
 
 		modelBee.Draw(shaderProgram, camera, beeTrajectory, beeRotation, glm::vec3(0.25f,0.25f,0.25f));
-		modelFlower.Draw(shaderProgram, camera,glm::vec3(30.0f, 30.0f, 0.0f));
-		modelHive.Draw(shaderProgram, camera);
-
-		beeTrajectory[0] += 0.01f;
-		beeTrajectory[1] -= 0.001f;
-		beeTrajectory[2] -= 0.005f;
-
-		/*if (ZDegrees > 0.02f) {
-			ZDegrees -= 0.02f;
-			ZDegrees += 0.0001f;
+		modelFlower.Draw(shaderProgram, camera, glm::vec3(30.0f, 30.0f, 0.0f));
+		modelHive.Draw(shaderProgram, camera, glm::vec3(-1.7f, 0.0f, 0.0f));
+		
+		if (counter < 3000.0f / multiplier) {
+			if (counter > 2900.0f / multiplier && counter < 3000.0f / multiplier) {
+				XDegrees = 0.00025f * multiplier;
+				YDegrees = 0.00255f * multiplier;
+				ZDegrees = 0.02200f * multiplier;
+				beeRotation = glm::rotate(beeRotation, XDegrees, glm::vec3(1.0f, 0.0f, 0.0f));		//X
+				beeRotation = glm::rotate(beeRotation, YDegrees, glm::vec3(0.0f, 1.0f, 0.0f));		//Y
+				beeRotation = glm::rotate(beeRotation, ZDegrees, glm::vec3(0.0f, 0.0f, 1.0f));		//Z
+			}
+			counter += 1.0f;
+			beeTrajectory[0] += 0.0123f * multiplier;
+			beeTrajectory[1] -= 0.0046f * multiplier;
+			beeTrajectory[2] += 0.0004f * multiplier;
 		}
-		else {
-			ZDegrees += 0.0001f;
-		}*/
+		else if (counter >= 3000.0f / multiplier && counter <= 3500.0f / multiplier) {
+			counter += 1.0f;
+		}
+		else if (counter >= 3500.0f / multiplier && counter <= 6500.0f / multiplier) {
+			if (counter >= 3500.0f / multiplier && counter < 3600.0f / multiplier) {
+				XDegrees = -0.00125f * multiplier;
+				YDegrees = -0.01250f * multiplier;
+				ZDegrees = 0.01500f * multiplier;
+				beeRotation = glm::rotate(beeRotation, XDegrees, glm::vec3(1.0f, 0.0f, 0.0f));		//X
+				beeRotation = glm::rotate(beeRotation, YDegrees, glm::vec3(0.0f, 1.0f, 0.0f));		//Y
+				beeRotation = glm::rotate(beeRotation, ZDegrees, glm::vec3(0.0f, 0.0f, 1.0f));		//Z
+			}
+			counter += 1.0f;
+			beeTrajectory[0] -= 0.0123f * multiplier;
+			beeTrajectory[1] += 0.0046f * multiplier;
+			beeTrajectory[2] -= 0.0004f * multiplier;
+		}
 		
 		glfwSwapBuffers(window);
 
