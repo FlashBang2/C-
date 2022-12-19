@@ -1,4 +1,5 @@
 #include"Model.h"
+#include <random>
 
 const unsigned int width = 1920;
 const unsigned int height = 1080;
@@ -61,6 +62,17 @@ int main()
 
 	float counter = 0.0f;
 	float multiplier = 10.0f;
+	float ammountOfFlowers = 9;
+
+	std::vector<glm::vec3> flowersPositions;
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> distr(-30, 30);
+
+	for (int i = 0;i < ammountOfFlowers;i++) {
+		flowersPositions.push_back(glm::vec3((float)distr(gen),30.0f,(float)distr(gen)));
+	}
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -74,6 +86,9 @@ int main()
 
 		modelBee.Draw(shaderProgram, camera, beeTrajectory, beeRotation, glm::vec3(0.25f,0.25f,0.25f));
 		modelFlower.Draw(shaderProgram, camera, glm::vec3(30.0f, 30.0f, 0.0f));
+		for (int i = 0; i < flowersPositions.size();i++) {
+			modelFlower.Draw(shaderProgram, camera, flowersPositions[i]);
+		}
 		modelHive.Draw(shaderProgram, camera, glm::vec3(-1.7f, 0.0f, 0.0f));
 		
 		if (counter < 3000.0f / multiplier) {
