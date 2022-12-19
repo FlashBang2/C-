@@ -47,10 +47,12 @@ int main()
 	std::string modelBeePath = "models/Bee/bee.gltf";
 	std::string modelFlowerPath = "models/Flower/flower.gltf";
 	std::string modelHivePath = "models/Hive/hive.gltf";
+	std::string modelTreePath = "models/Tree/tree.gltf";
 	
 	Model modelBee(modelBeePath.c_str());
 	Model modelFlower(modelFlowerPath.c_str());
 	Model modelHive(modelHivePath.c_str());
+	Model modelTree(modelTreePath.c_str());
 
 	glm::vec3 beeTrajectory = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::quat beeRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
@@ -90,6 +92,7 @@ int main()
 			modelFlower.Draw(shaderProgram, camera, flowersPositions[i]);
 		}
 		modelHive.Draw(shaderProgram, camera, glm::vec3(-1.7f, 0.0f, 0.0f));
+		modelTree.Draw(shaderProgram, camera, glm::vec3(-5.0f, 31.0f, 18.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(7.0f, 7.0f, 7.0f));
 		
 		if (counter < 3000.0f / multiplier) {
 			if (counter >= 2900.0f / multiplier && counter < 3000.0f / multiplier) {
