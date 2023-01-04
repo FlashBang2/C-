@@ -48,23 +48,36 @@ int main()
 	std::string modelFlowerPath = "models/Flower/flower.gltf";
 	std::string modelHivePath = "models/Hive/hive.gltf";
 	std::string modelTreePath = "models/Tree/tree.gltf";
+	std::string modelSunAndMoonPath = "models/SunAndMoon/SunAndMoon.gltf";
 	
 	Model modelBee(modelBeePath.c_str());
 	Model modelFlower(modelFlowerPath.c_str());
 	Model modelHive(modelHivePath.c_str());
 	Model modelTree(modelTreePath.c_str());
+	Model modelSunAndMoon(modelSunAndMoonPath.c_str());
 
 	glm::vec3 beeTrajectory = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::quat beeRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+	glm::quat sunAndMoonRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 	
 	float XDegrees = -0.10f, YDegrees = 0.10f, ZDegrees = -20.0f;
+
 	beeRotation = glm::rotate(beeRotation, XDegrees, glm::vec3(1.0f, 0.0f, 0.0f));		//X
 	beeRotation = glm::rotate(beeRotation, YDegrees, glm::vec3(0.0f, 1.0f, 0.0f));		//Y
 	beeRotation = glm::rotate(beeRotation, ZDegrees, glm::vec3(0.0f, 0.0f, 1.0f));		//Z
 
+	sunAndMoonRotation = glm::rotate(sunAndMoonRotation, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));		//X
+	sunAndMoonRotation = glm::rotate(sunAndMoonRotation, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));		//Y
+	sunAndMoonRotation = glm::rotate(sunAndMoonRotation, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));		//Z
+
 	float counter = 0.0f;
+	float timeOfDay = 0.0f;
 	float multiplier = 10.0f;
 	float ammountOfFlowers = 9;
+
+	float redSaturation   = 2.0f;
+	float greenSaturation = 2.0f;
+	float blueSaturation  = 2.0f;
 
 	std::vector<glm::vec3> flowersPositions;
 
@@ -72,7 +85,7 @@ int main()
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> distr(-30, 30);
 
-	for (int i = 0;i < ammountOfFlowers;i++) {
+	for (int i = 0; i < ammountOfFlowers; i++) {
 		flowersPositions.push_back(glm::vec3((float)distr(gen),30.0f,(float)distr(gen)));
 	}
 
@@ -88,11 +101,25 @@ int main()
 
 		modelBee.Draw(shaderProgram, camera, beeTrajectory, beeRotation, glm::vec3(0.25f,0.25f,0.25f));
 		modelFlower.Draw(shaderProgram, camera, glm::vec3(30.0f, 30.0f, 0.0f));
-		for (int i = 0; i < flowersPositions.size();i++) {
+		for (int i = 0; i < flowersPositions.size(); i++) {
 			modelFlower.Draw(shaderProgram, camera, flowersPositions[i]);
 		}
 		modelHive.Draw(shaderProgram, camera, glm::vec3(-1.7f, 0.0f, 0.0f));
 		modelTree.Draw(shaderProgram, camera, glm::vec3(-5.0f, 31.0f, 18.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(7.0f, 7.0f, 7.0f));
+		modelSunAndMoon.Draw(shaderProgram, camera, glm::vec3(0.0f, 0.0f, 0.0f), sunAndMoonRotation, glm::vec3(10.0f, 20.0f, 10.0f));
+
+		//Day Night cycle
+		XDegrees = 0.0000f * multiplier;
+		YDegrees = 0.0000f * multiplier;
+		ZDegrees = 0.0001f * multiplier;
+		sunAndMoonRotation = glm::rotate(sunAndMoonRotation, XDegrees, glm::vec3(1.0f, 0.0f, 0.0f));		//X
+		sunAndMoonRotation = glm::rotate(sunAndMoonRotation, YDegrees, glm::vec3(0.0f, 1.0f, 0.0f));		//Y
+		sunAndMoonRotation = glm::rotate(sunAndMoonRotation, ZDegrees, glm::vec3(0.0f, 0.0f, 1.0f));		//Z
+		/*redSaturation -= 0.00010f * multiplier;
+		greenSaturation -= 0.00005f * multiplier;
+		blueSaturation  -= 0.00001f * multiplier;*/
+		lightColor = glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f);
+		glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 		
 		if (counter < 3000.0f / multiplier) {
 			if (counter >= 2900.0f / multiplier && counter < 3000.0f / multiplier) {
