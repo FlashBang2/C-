@@ -49,12 +49,14 @@ int main()
 	std::string modelHivePath = "models/Hive/hive.gltf";
 	std::string modelTreePath = "models/Tree/tree.gltf";
 	std::string modelSunAndMoonPath = "models/SunAndMoon/SunAndMoon.gltf";
+	std::string modelFloorPath = "models/Floor/floor.gltf";
 	
 	Model modelBee(modelBeePath.c_str());
 	Model modelFlower(modelFlowerPath.c_str());
 	Model modelHive(modelHivePath.c_str());
 	Model modelTree(modelTreePath.c_str());
 	Model modelSunAndMoon(modelSunAndMoonPath.c_str());
+	Model modelFloor(modelFloorPath.c_str());
 
 	glm::vec3 beeTrajectory = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::quat beeRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
@@ -72,12 +74,14 @@ int main()
 
 	float counter = 0.0f;
 	float timeOfDay = 0.0f;
-	float multiplier = 10.0f;
+	float multiplier = 100.0f;
 	float ammountOfFlowers = 9;
 
 	float redSaturation   = 2.0f;
 	float greenSaturation = 2.0f;
 	float blueSaturation  = 2.0f;
+
+	bool isDay = true;
 
 	std::vector<glm::vec3> flowersPositions;
 
@@ -107,17 +111,30 @@ int main()
 		modelHive.Draw(shaderProgram, camera, glm::vec3(-1.7f, 0.0f, 0.0f));
 		modelTree.Draw(shaderProgram, camera, glm::vec3(-5.0f, 31.0f, 18.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(7.0f, 7.0f, 7.0f));
 		modelSunAndMoon.Draw(shaderProgram, camera, glm::vec3(0.0f, 0.0f, 0.0f), sunAndMoonRotation, glm::vec3(10.0f, 20.0f, 10.0f));
+		modelFloor.Draw(shaderProgram, camera, glm::vec3(0.0f, 0.3f, 0.0f));
 
 		//Day Night cycle
+		if (timeOfDay < 31000.0f / multiplier) {
+			timeOfDay++;
+			redSaturation   -= 0.00008f * multiplier;
+			greenSaturation -= 0.00005f * multiplier;
+			blueSaturation  -= 0.00001f * multiplier;
+		}
+		else if (timeOfDay >= 31000.0f / multiplier && timeOfDay < 62000.0f / multiplier) {
+			timeOfDay++;
+			redSaturation   += 0.00008f * multiplier;
+			greenSaturation += 0.00005f * multiplier;
+			blueSaturation  += 0.00001f * multiplier;
+		}
+		else {
+			timeOfDay = 0.0f;
+		}
 		XDegrees = 0.0000f * multiplier;
 		YDegrees = 0.0000f * multiplier;
 		ZDegrees = 0.0001f * multiplier;
 		sunAndMoonRotation = glm::rotate(sunAndMoonRotation, XDegrees, glm::vec3(1.0f, 0.0f, 0.0f));		//X
 		sunAndMoonRotation = glm::rotate(sunAndMoonRotation, YDegrees, glm::vec3(0.0f, 1.0f, 0.0f));		//Y
 		sunAndMoonRotation = glm::rotate(sunAndMoonRotation, ZDegrees, glm::vec3(0.0f, 0.0f, 1.0f));		//Z
-		/*redSaturation -= 0.00010f * multiplier;
-		greenSaturation -= 0.00005f * multiplier;
-		blueSaturation  -= 0.00001f * multiplier;*/
 		lightColor = glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f);
 		glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 		
