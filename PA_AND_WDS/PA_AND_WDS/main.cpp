@@ -74,7 +74,7 @@ int main()
 
 	float counter = 0.0f;
 	float timeOfDay = 0.0f;
-	float multiplier = 100.0f;
+	float multiplier = 10.0f;
 	float ammountOfFlowers = 9;
 
 	float redSaturation   = 2.0f;
