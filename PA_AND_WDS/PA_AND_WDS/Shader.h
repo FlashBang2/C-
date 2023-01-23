@@ -18,6 +18,8 @@ public:
 	Shader(const char* vertexShaderPath, const char* fragmentShaderPath);
 	void activate();
 	void setMat4(const std::string& name, glm::mat4 value);
+	void setVec3(const std::string& name, glm::vec3 value);
+	void setVec4(const std::string& name, glm::vec4 value);
 	void setFloat(const std::string& name, float value);
 	void setInt(const std::string& name, int value);
 	std::string loadShaderSrc(const char* filepath);

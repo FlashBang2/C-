@@ -59,6 +59,13 @@ int main() {
 
 	shader.activate();
 
+	glm::vec3 LightPosition = glm::vec3(1.0f, 1.5f, 1.5f);
+	glm::mat4 lightModel = glm::mat4(1.0f);
+	lightModel = glm::translate(lightModel, LightPosition);
+
+	shader.setVec3("lightPosition", LightPosition);
+	shader.setVec4("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
 	while (!glfwWindowShouldClose(window))
 	{
 
@@ -74,6 +81,8 @@ int main() {
 		model.radians = 0.05f;
 
 		model.Render(shader);
+
+		shader.setVec3("cameraPosition", glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
 
 		shader.setMat4("camMatrix", camera.cameraMatrix);
 
