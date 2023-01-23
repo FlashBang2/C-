@@ -20,7 +20,7 @@ void processInput(GLFWwindow* window) {
 
 int main() {
 
-	unsigned int shaderProgram;
+	float radians = 0.0f;
 
 	glfwInit();
 
@@ -61,6 +61,7 @@ int main() {
 
 	while (!glfwWindowShouldClose(window))
 	{
+
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -68,6 +69,9 @@ int main() {
 		camera.Inputs(window);
 
 		camera.updateMatrix(45.0f, 0.1f, 500.0f);
+
+		model.rotation = glm::vec3(0.0f, 1.0f, 0.0f);
+		model.radians = 0.05f;
 
 		model.Render(shader);
 

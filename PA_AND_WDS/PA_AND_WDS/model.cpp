@@ -18,9 +18,8 @@ void Model::loadModel(std::string path) {
 }
 
 void Model::Render(Shader shaderProgram) {
-	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, position);
-	model = glm::rotate(model, glm::radians(0.0f), rotation);
+	model = glm::rotate(model, glm::radians(radians), rotation);
 	model = glm::scale(model, size);
 	shaderProgram.setMat4("model", model);
 
