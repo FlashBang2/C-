@@ -1,24 +1,25 @@
-#ifndef TEXTURE_CLASS_H
+ #ifndef TEXTURE_CLASS_H
 #define TEXTURE_CLASS_H
 
-#include<glad/glad.h>
-#include<stb/stb_image.h>
-
-#include"shaderClass.h"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <assimp/scene.h>
+#include <stb/stb_image.h>
 
 class Texture
 {
 public:
+	unsigned int ID;
+	aiTextureType type;
+	std::string directory, path;
 
-	GLuint ID;
-	const char* type;
-	GLuint unit;
+	Texture(std::string directory, std::string path, aiTextureType type);
+	void generate();
+	void load(bool flip = true);
+	void bind();
+protected:
 
-	Texture(const char* image, const char* texType, GLuint slot);
+private:
 
-	void texUnit(Shader& shader, const char* uniform, GLuint unit);
-	void Bind();
-	void Unbind();
-	void Delete();
 };
 #endif

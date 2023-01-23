@@ -1,31 +1,37 @@
 #ifndef MESH_CLASS_H
 #define MESH_CLASS_H
 
-#include<string>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <vector>
+#include <glm/glm.hpp>
+#include "Shader.h"
+#include "Texture.h"
 
-#include"VAO.h"
-#include"EBO.h"
-#include"Camera.h"
-#include"Texture.h"
+struct Vertex {
+	glm::vec3 position;
+	glm::vec3 normal;
+	glm::vec2 texCoord;
+
+	static std::vector<struct Vertex> genList(float* vertices, int noVertices);
+};
+typedef struct Vertex Vertex;
 
 class Mesh
 {
 public:
-	std::vector <Vertex> vertices;
-	std::vector <GLuint> indices;
-	std::vector <Texture> textures;
-	VAO VAO;
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indcies;
+	unsigned int VAO;
+	std::vector<Texture> textures;
 
-	Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures);
-
-	void Draw
-	(
-		Shader& shader, 
-		Camera& camera,
-		glm::mat4 matrix = glm::mat4(1.0f),
-		glm::vec3 translation = glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f),
-		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f)
-	);
+	Mesh();
+	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures = {});
+	void Render(Shader shaderProgram);
+	void Cleanup();
+protected:
+private:
+	unsigned int VBO, EABO;
+	void setup();
 };
 #endif

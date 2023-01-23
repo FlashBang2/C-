@@ -1,92 +1,49 @@
-#include"Texture.h"
+#include "Texture.h"
 
-Texture::Texture(const char* image, const char* texType, GLuint slot)
-{
-	type = texType;
+Texture::Texture(std::string directory, std::string path, aiTextureType type)
+	: directory(directory), path(path), type(type) {
+	generate();
+}
 
-	int widthImg, heightImg, numColCh;
-	stbi_set_flip_vertically_on_load(true);
-	unsigned char* bytes = stbi_load(image, &widthImg, &heightImg, &numColCh, 0);
-
+void Texture::generate() {
 	glGenTextures(1, &ID);
-	glActiveTexture(GL_TEXTURE0 + slot);
-	unit = slot;
+}
+
+void Texture::load(bool flip) {
+	stbi_set_flip_vertically_on_load(flip);
+
+	int width, height, nChannels;
+
+	unsigned char* data = stbi_load((directory + "/" + path).c_str(), &width, &height, &nChannels, 0);
+
+	GLenum colorMode = GL_RGB;
+	switch (nChannels) {
+	case 1:
+		colorMode = GL_RED;
+		break;
+	case 4:
+		colorMode = GL_RGBA;
+		break;
+		
+	}
+
+	if (data) {
+		glBindTexture(GL_TEXTURE_2D, ID);
+		glTexImage2D(GL_TEXTURE_2D, 0, colorMode, width, height, 0, colorMode, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	}
+	else {
+		printf("Error during image loading:\n%s", (directory + "/" + path).c_str());
+	}
+
+	stbi_image_free(data);
+}
+
+void Texture::bind() {
 	glBindTexture(GL_TEXTURE_2D, ID);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	if (numColCh == 4)
-		glTexImage2D
-		(
-			GL_TEXTURE_2D,
-			0,
-			GL_RGBA,
-			widthImg,
-			heightImg,
-			0,
-			GL_RGBA,
-			GL_UNSIGNED_BYTE,
-			bytes
-		);
-	else if (numColCh == 3)
-		glTexImage2D
-		(
-			GL_TEXTURE_2D,
-			0,
-			GL_RGBA,
-			widthImg,
-			heightImg,
-			0,
-			GL_RGB,
-			GL_UNSIGNED_BYTE,
-			bytes
-		);
-	else if (numColCh == 1)
-		glTexImage2D
-		(
-			GL_TEXTURE_2D,
-			0,
-			GL_RGBA,
-			widthImg,
-			heightImg,
-			0,
-			GL_RED,
-			GL_UNSIGNED_BYTE,
-			bytes
-		);
-	else
-		throw std::invalid_argument("Automatic Texture type recognition failed");
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	stbi_image_free(bytes);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void Texture::texUnit(Shader& shader, const char* uniform, GLuint unit)
-{
-	GLuint texUni = glGetUniformLocation(shader.ID, uniform);
-	shader.Activate();
-	glUniform1i(texUni, unit);
-}
-
-void Texture::Bind()
-{
-	glActiveTexture(GL_TEXTURE0 + unit);
-	glBindTexture(GL_TEXTURE_2D, ID);
-}
-
-void Texture::Unbind()
-{
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void Texture::Delete()
-{
-	glDeleteTextures(1, &ID);
 }
