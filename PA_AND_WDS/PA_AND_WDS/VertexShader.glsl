@@ -18,6 +18,7 @@ uniform mat4 camMatrix;
 uniform mat4 projection;
 uniform mat4 model;
 uniform mat4 finalBonesMatrices[MAX_BONES];
+uniform mat4 finalBonesNormal[MAX_BONES];
 
 void main() {
 
@@ -34,7 +35,7 @@ void main() {
 		}
 		vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(Position, 1.0);
 		totalPosition += localPosition * weights[i];
-		localNormal = mat3(finalBonesMatrices[boneIds[i]]) * Normal;
+		localNormal = mat3(finalBonesNormal[boneIds[i]]) * Normal;
 		
 	}
 	mat4 viewMatrix = camMatrix * model;

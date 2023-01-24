@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/gtc/matrix_inverse.hpp>
 
 #include "model.h"
 #include "Shader.h"
@@ -53,9 +54,9 @@ int main() {
 	Shader shader("VertexShader.glsl", "FragmentShader.glsl");
 
 	Model model;
-	model.loadModel("models/boblampclean.md5mesh");
+	model.loadModel("models/Bee.fbx");
 	
-	Animation animation("models/boblampclean.md5anim", &model);
+	Animation animation("models/Bee.fbx", &model);
 
 	Animator animator(&animation);
 
@@ -94,6 +95,7 @@ int main() {
 		auto transforms = animator.GetCalculatedBoneMatrix();
 		for (unsigned int i = 0; i < transforms.size(); i++) {
 			shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+			shader.setMat4("finalBonesNormal[" + std::to_string(i) + "]", glm::inverseTranspose(transforms[i]));
 		}
 
 		model.Render(shader);

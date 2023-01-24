@@ -10,7 +10,7 @@ Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel)
 	}
 	for (unsigned int i = 0; i < channel->mNumRotationKeys;++i) {
 		KeyRotation data;
-		data.orientation = glm::quat(channel->mRotationKeys[i].mValue.x, channel->mRotationKeys[i].mValue.y, channel->mRotationKeys[i].mValue.z, channel->mRotationKeys[i].mValue.w);
+		data.orientation = glm::quat(channel->mRotationKeys[i].mValue.w, channel->mRotationKeys[i].mValue.x, channel->mRotationKeys[i].mValue.y, channel->mRotationKeys[i].mValue.z);
 		data.timeStamp = channel->mPositionKeys[i].mTime;
 		Rotations.push_back(data);
 	}
