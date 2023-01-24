@@ -4,6 +4,8 @@
 #include "model.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "Animation.h"
+#include "Animator.h"
 
 const unsigned int userWidth = 1920;
 const unsigned int userHeight = 1080;
@@ -20,7 +22,7 @@ void processInput(GLFWwindow* window) {
 
 int main() {
 
-	float radians = 0.0f;
+	float radians = 0.0f, deltaTime = 0.0f, lastTime = 0.0f;
 
 	glfwInit();
 
@@ -51,7 +53,11 @@ int main() {
 	Shader shader("VertexShader.glsl", "FragmentShader.glsl");
 
 	Model model;
-	model.loadModel("models/Bee/bee.gltf");
+	model.loadModel("models/boblampclean.md5mesh");
+	
+	Animation animation("models/boblampclean.md5anim", &model);
+
+	Animator animator(&animation);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -68,6 +74,11 @@ int main() {
 
 	while (!glfwWindowShouldClose(window))
 	{
+		float currentTime = glfwGetTime();
+		deltaTime = currentTime - lastTime;
+		lastTime = currentTime;
+
+		animator.UpdateAnimation(deltaTime);
 
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 
@@ -76,6 +87,11 @@ int main() {
 		camera.Inputs(window);
 
 		camera.updateMatrix(45.0f, 0.1f, 500.0f);
+
+		auto transforms = animator.GetCalculatedBoneMatrix();
+		for (unsigned int i = 0; i < transforms.size(); i++) {
+			shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+		}
 
 		model.rotation = glm::vec3(0.0f, 1.0f, 0.0f);
 		model.radians = 0.05f;

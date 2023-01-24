@@ -6,7 +6,7 @@ Model::Model(glm::vec3 position, glm::vec3 size, glm::vec3 rotation, float radia
 void Model::loadModel(std::string path) {
 	Assimp::Importer importer;
 
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 		printf("Could not load model:\n%s\n Error message:\n%s", path.c_str(), importer.GetErrorString());
@@ -53,6 +53,8 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
 		Vertex vertex;
 
+		SetVertexBoneDataToDefault(vertex);
+
 		vertex.position = glm::vec3(
 			mesh->mVertices[i].x,
 			mesh->mVertices[i].y,
@@ -92,6 +94,8 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	}
 
+	ExtractBoneWeightForVertices(vertices, mesh, scene);
+
 	return Mesh(vertices, indices, textures);
 }
 
@@ -122,4 +126,54 @@ std::vector<Texture> Model::loadTextures(aiMaterial* material, aiTextureType typ
 	}
 
 	return textures;
+}
+
+void Model::SetVertexBoneDataToDefault(Vertex& vertex) {
+	for (int i = 0; i < MAX_BONE_INFLUENCE;i++) {
+		vertex.BoneIds[i] = -1;
+		vertex.Weights[i] = 0.0f;
+	}
+}
+
+void Model::SetVertexBoneData(Vertex& vertex, int boneID, float weight) {
+	for (int i = 0; i < MAX_BONE_INFLUENCE; i++) {
+		if (vertex.BoneIds[i] < 0) {
+			vertex.Weights[i] = weight;
+			vertex.BoneIds[i] = boneID;
+			break;
+		}
+	}
+}
+
+void Model::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene) {
+	auto& boneInfoMap = BoneInfoMap;
+	int boneCount = BoneCounter;
+
+	for (int i = 0; i < mesh->mNumBones;i++) {
+		int boneID = -1;
+		std::string boneName = mesh->mBones[i]->mName.C_Str();
+		if (boneInfoMap.find(boneName) == boneInfoMap.end()) {
+			BoneInfo newBoneInfo;
+			newBoneInfo.ID = boneCount;
+			newBoneInfo.offset = glm::mat4(
+				mesh->mBones[i]->mOffsetMatrix.a1, mesh->mBones[i]->mOffsetMatrix.a2, mesh->mBones[i]->mOffsetMatrix.a3, mesh->mBones[i]->mOffsetMatrix.a4,
+				mesh->mBones[i]->mOffsetMatrix.b1, mesh->mBones[i]->mOffsetMatrix.b2, mesh->mBones[i]->mOffsetMatrix.b3, mesh->mBones[i]->mOffsetMatrix.b4,
+				mesh->mBones[i]->mOffsetMatrix.c1, mesh->mBones[i]->mOffsetMatrix.c2, mesh->mBones[i]->mOffsetMatrix.c3, mesh->mBones[i]->mOffsetMatrix.c4,
+				mesh->mBones[i]->mOffsetMatrix.d1, mesh->mBones[i]->mOffsetMatrix.d2, mesh->mBones[i]->mOffsetMatrix.d3, mesh->mBones[i]->mOffsetMatrix.d4
+			);
+			boneInfoMap[boneName] = newBoneInfo;
+			boneID = boneCount;
+			boneCount++;
+		}
+		else {
+			boneID = boneInfoMap[boneName].ID;
+		}
+		assert(boneID != -1);
+		for (int j = 0; j < mesh->mBones[i]->mNumWeights;j++) {
+			int vertexID = mesh->mBones[i]->mWeights[j].mVertexId;
+			float weight = mesh->mBones[i]->mWeights[j].mWeight;
+			assert(vertexID <= vertices.size());
+			SetVertexBoneData(vertices[vertexID], boneID, weight);
+		}
+	}
 }
