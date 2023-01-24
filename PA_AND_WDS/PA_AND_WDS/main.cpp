@@ -55,9 +55,9 @@ int main() {
 	Model model;
 	model.loadModel("models/boblampclean.md5mesh");
 	
-	//Animation animation("models/boblampclean.md5anim", &model);
+	Animation animation("models/boblampclean.md5anim", &model);
 
-	//Animator animator(&animation);
+	Animator animator(&animation);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -78,7 +78,7 @@ int main() {
 		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
 
-		//animator.UpdateAnimation(deltaTime);
+		animator.UpdateAnimation(deltaTime);
 
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 
@@ -91,10 +91,10 @@ int main() {
 		projection = glm::perspective(glm::radians(45.0f), (float)camera.width / camera.height, 0.1f, 500.0f);
 		shader.setMat4("projection", projection);
 
-		//auto transforms = animator.GetCalculatedBoneMatrix();
-		/*for (unsigned int i = 0; i < transforms.size(); i++) {
+		auto transforms = animator.GetCalculatedBoneMatrix();
+		for (unsigned int i = 0; i < transforms.size(); i++) {
 			shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
-		}*/
+		}
 
 		model.Render(shader);
 

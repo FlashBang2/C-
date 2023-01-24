@@ -94,7 +94,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	}
 
-	//ExtractBoneWeightForVertices(vertices, mesh, scene);
+	ExtractBoneWeightForVertices(vertices, mesh, scene);
 
 	return Mesh(vertices, indices, textures);
 }
