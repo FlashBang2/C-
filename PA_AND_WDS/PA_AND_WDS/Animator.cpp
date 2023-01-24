@@ -1,9 +1,7 @@
 #include "Animator.h"
 
 Animator::Animator(Animation* animation)
-	:animation(animation), DeltaTime(0.0f) {
-	CurrentTime = 0.0f;
-
+	:animation(animation), DeltaTime(0.0f), CurrentTime(0.0f) {
 	for (unsigned int i = 0; i < 100;i++) {
 		CalculatedBoneMatrix.push_back(glm::mat4(1.0f));
 	}
@@ -19,9 +17,10 @@ void Animator::UpdateAnimation(float deltaTime) {
 }
 
 void Animator::CalculateBoneMatrix(const AssimpNodeData* node, glm::mat4 parentTransform) {
+	std::string name = node->name;
 	glm::mat4 currentTransformation = node->transformation;
 
-	Bone* Bone = animation->FindBone(node->name);
+	Bone* Bone = animation->FindBone(name);
 
 	if (Bone) {
 		Bone->Update(CurrentTime);
@@ -31,9 +30,9 @@ void Animator::CalculateBoneMatrix(const AssimpNodeData* node, glm::mat4 parentT
 	glm::mat4 globalTransformation = parentTransform * currentTransformation;
 
 	auto boneInfoMap = animation->GetBoneIDMap();
-	if (boneInfoMap.find(node->name) != boneInfoMap.end()) {
-		int index = boneInfoMap[node->name].ID;
-		glm::mat4 offset = boneInfoMap[node->name].offset;
+	if (boneInfoMap.find(name) != boneInfoMap.end()) {
+		int index = boneInfoMap[name].ID;
+		glm::mat4 offset = boneInfoMap[name].offset;
 		CalculatedBoneMatrix[index] = globalTransformation * offset;
 	}
 

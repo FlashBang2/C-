@@ -27,5 +27,5 @@ vec4 directLight() {
 }
 
 void main() {
-	FragColor = directLight();
+	FragColor = texture(diffuse0, texCoord);
 }
