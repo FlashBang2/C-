@@ -55,6 +55,11 @@ int main() {
 
 	Model model;
 	model.loadModel("models/Bee.fbx");
+	model.loadModel("models/Hive.fbx");
+	model.loadModel("models/Tree.fbx");
+	model.loadModel("models/Flower.fbx");
+	model.loadModel("models/SunAndMoon.fbx");
+	model.loadModel("models/Floor.fbx");
 	
 	Animation animation("models/Bee.fbx", &model);
 
