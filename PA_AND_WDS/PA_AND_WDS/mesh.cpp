@@ -35,6 +35,9 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 void Mesh::Render(Shader shaderProgram) {
 	unsigned int diffuseIndex = 0, specularIndex = 0;
 
+	shaderProgram.activate();
+	glBindVertexArray(VAO);
+
 	for (unsigned int i = 0; i < textures.size();i++) {
 		glActiveTexture(GL_TEXTURE0 + i);
 		std::string name;
@@ -50,12 +53,11 @@ void Mesh::Render(Shader shaderProgram) {
 		textures[i].bind();
 	}
 
-	glBindVertexArray(VAO);
+	
 	glDrawElements(GL_TRIANGLES, indcies.size(), GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);
 
-	glActiveTexture(GL_TEXTURE0);
 }
 
 void Mesh::Cleanup() {

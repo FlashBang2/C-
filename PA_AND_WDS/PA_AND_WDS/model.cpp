@@ -23,6 +23,7 @@ void Model::Render(Shader shaderProgram) {
 	model = glm::scale(model, size);
 	shaderProgram.setMat4("model", model);
 
+	printf("",meshes);
 	for (Mesh mesh : meshes) {
 		mesh.Render(shaderProgram);
 	}
@@ -88,8 +89,8 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 	if (mesh->mMaterialIndex >= 0) {
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-		std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE);
-		std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR);
+		std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE, scene);
+		std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR, scene);
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	}
@@ -99,7 +100,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 	return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::loadTextures(aiMaterial* material, aiTextureType type) {
+std::vector<Texture> Model::loadTextures(aiMaterial* material, aiTextureType type, const aiScene* scene) {
 	std::vector<Texture> textures;
 
 	for (unsigned int i = 0; i < material->GetTextureCount(type);i++) {
@@ -118,10 +119,20 @@ std::vector<Texture> Model::loadTextures(aiMaterial* material, aiTextureType typ
 		}
 
 		if (!skip) {
-			Texture texture(directory, path.C_Str(), type);
-			texture.load(false);
-			textures.push_back(texture);
-			texturesLoaded.push_back(texture);
+			const aiTexture* embendedTexture = scene->GetEmbeddedTexture(path.C_Str());
+
+			if (embendedTexture) {
+				Texture texture(directory, path.C_Str(), type);
+				texture.load(embendedTexture->mWidth,embendedTexture->pcData);
+				textures.push_back(texture);
+				texturesLoaded.push_back(texture);
+			}
+			else {
+				Texture texture(directory, path.C_Str(), type);
+				texture.load(false);
+				textures.push_back(texture);
+				texturesLoaded.push_back(texture);
+			}
 		}
 	}
 

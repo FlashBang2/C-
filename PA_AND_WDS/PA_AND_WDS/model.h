@@ -37,7 +37,7 @@ protected:
 	std::string directory;
 	std::vector<Texture> texturesLoaded;
 
-	std::vector<Texture> loadTextures(aiMaterial* mat, aiTextureType type);
+	std::vector<Texture> loadTextures(aiMaterial* mat, aiTextureType type, const aiScene* scene);
 private:
 	std::map<std::string, BoneInfo> BoneInfoMap;
 	int BoneCounter = 0;
