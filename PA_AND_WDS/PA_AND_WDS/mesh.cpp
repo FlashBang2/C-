@@ -53,7 +53,6 @@ void Mesh::Render(Shader shaderProgram) {
 		textures[i].bind();
 	}
 
-	
 	glDrawElements(GL_TRIANGLES, indcies.size(), GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);

@@ -53,15 +53,27 @@ int main() {
 
 	Shader shader("VertexShader.glsl", "FragmentShader.glsl");
 
-	Model model;
+	Model model,model2,model3,model4,model5,model6;
 	model.loadModel("models/Bee.fbx");
-	model.loadModel("models/flower.fbx");
-	model.loadModel("models/Hive.fbx");
-	model.loadModel("models/Tree.fbx");
-	model.loadModel("models/Flower.fbx");
-	model.loadModel("models/SunAndMoon.fbx");
-	model.loadModel("models/Floor.fbx");
-	
+	model2.flip = true;
+	model2.loadModel("models/flower.fbx");
+	model3.flip = true;
+	model3.loadModel("models/hive/hive.gltf");
+	model4.flip = true;
+	model4.loadModel("models/Tree.fbx");
+	model5.flip = true;
+	model5.loadModel("models/SunAndMoon.fbx");
+	model6.flip = true;
+	model6.loadModel("models/Floor.fbx");
+
+	model.position = glm::vec3(0.0f, 0.0f, 5.0f);
+	model3.position = glm::vec3(0.0f, 0.0f, 10.0f);
+	model4.position = glm::vec3(5.0f,0.0f, 0.0f);
+	model4.rotation = glm::vec3(0.0f,0.0f,1.0f);
+	model4.radians = 180.0f;
+	model5.position = glm::vec3(0.0f, 5.0f, 0.0f);
+	model6.size = glm::vec3(5.0f, 5.0f, 5.0f);
+
 	Animation animation("models/Bee.fbx", &model);
 
 	Animator animator(&animation);
@@ -77,7 +89,7 @@ int main() {
 	lightModel = glm::translate(lightModel, LightPosition);
 
 	shader.setVec3("lightPosition", LightPosition);
-	shader.setVec4("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	shader.setVec4("lightColor", glm::vec4(5.0f, 5.0f, 5.0f, 0.0f));
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -105,6 +117,11 @@ int main() {
 		}
 
 		model.Render(shader);
+		model2.Render(shader);
+		model3.Render(shader);
+		model4.Render(shader);
+		model5.Render(shader);
+		model6.Render(shader);
 
 		shader.setVec3("cameraPosition", glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
 

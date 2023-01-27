@@ -15,7 +15,7 @@ public:
 
 	Texture(std::string directory, std::string path, aiTextureType type);
 	void generate();
-	void load(bool flip = true);
+	void load(bool flip = false);
 	void load(unsigned int bufferSize, void* textureData);
 	void bind();
 protected:

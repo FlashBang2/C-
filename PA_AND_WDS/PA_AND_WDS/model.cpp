@@ -21,9 +21,11 @@ void Model::Render(Shader shaderProgram) {
 	model = glm::translate(model, position);
 	model = glm::rotate(model, glm::radians(radians), rotation);
 	model = glm::scale(model, size);
+	position = glm::vec3(0.0f, 0.0f, 0.0f);
+	radians = 0.0f;
+	size = glm::vec3(1.0f, 1.0f, 1.0f);
 	shaderProgram.setMat4("model", model);
 
-	printf("",meshes);
 	for (Mesh mesh : meshes) {
 		mesh.Render(shaderProgram);
 	}
@@ -129,7 +131,7 @@ std::vector<Texture> Model::loadTextures(aiMaterial* material, aiTextureType typ
 			}
 			else {
 				Texture texture(directory, path.C_Str(), type);
-				texture.load(false);
+				texture.load(flip);
 				textures.push_back(texture);
 				texturesLoaded.push_back(texture);
 			}

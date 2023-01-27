@@ -46,6 +46,7 @@ void Texture::load(bool flip) {
 
 void Texture::load(unsigned int bufferSize, void* textureData) {
 	generate();
+	stbi_set_flip_vertically_on_load(true);
 	int width, height, nChannels;
 
 	unsigned char* data = stbi_load_from_memory((const stbi_uc*) textureData, bufferSize,&width, &height, &nChannels, 0);
