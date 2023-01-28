@@ -63,30 +63,29 @@ int main() {
 	modelHive.loadModel("models/hive/hive.gltf");
 	modelTree.flip = true;
 	modelTree.loadModel("models/Tree.fbx");
-	/*modelSunAndMoon.flip = true;
-	modelSunAndMoon.loadModel("models/SunAndMoon.fbx");*/
+	modelSunAndMoon.flip = true;
+	modelSunAndMoon.loadModel("models/SunAndMoon.fbx");
 	modelFloor.flip = true;
 	modelFloor.loadModel("models/Floor/floor.gltf");
 
-	modelFloor.position = glm::vec3(0.0f, -5.0f, 0.0f);
+	modelFloor.position = glm::vec3(0.0f, -9.5f, 0.0f);
 	modelFloor.size = glm::vec3(70.0f, 70.0f, 70.0f);
 
-	/*/modelSunAndMoon.radians = 90.0f
+	modelSunAndMoon.radians = 1.0f;
 	modelSunAndMoon.size = glm::vec3(5.0f, 5.0f, 5.0f);
-	modelSunAndMoon.position = glm::vec3(0.0f, -10.0f, 0.0f);
-	modelSunAndMoon.rotation = glm::vec3(0.0f, 0.0f, 0.0f);*/
+	modelSunAndMoon.position = glm::vec3(0.0f, -14.5f, 0.0f);
+	modelSunAndMoon.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	//modelTree.rotation = glm::vec3(0.0f, 0.0f, 90.0f);
-	modelTree.position = glm::vec3(5.0f, -5.0f, 0.0f);
+	modelTree.position = glm::vec3(5.0f, -9.5f, 0.0f);
 	modelTree.size = glm::vec3(2.0f, 2.0f, 2.0f);
 
 	modelHive.rotation = glm::vec3(0.0f, 0.0f, 180.0f);
-	modelHive.position = glm::vec3(0.0f, 4.5f, 0.0f);
+	modelHive.position = glm::vec3(0.0f, 0.0f, 0.0f);
 	modelHive.size = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	/*modelBee.radians = 180.0f;
 	modelBee.rotation = glm::vec3(0.0f, 0.0f, 45.0f);*/
-	modelBee.position = glm::vec3(0.0f, 4.5f, 0.0f);
 	modelBee.size = glm::vec3(0.2f, 0.2f, 0.2f);
 
 	Animation animation("models/Bee.fbx", &modelBee);
@@ -120,7 +119,7 @@ int main() {
 	std::uniform_int_distribution<> distr(-30, 30);
 
 	for (unsigned int i = 0; i < 9;i++) {
-		modelFlower.position = glm::vec3((float)distr(gen), -5.0f, (float)distr(gen));
+		modelFlower.position = glm::vec3((float)distr(gen), -9.5f, (float)distr(gen));
 		flowers.push_back(modelFlower);
 	}
 
@@ -168,7 +167,7 @@ int main() {
 
 		shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
 
-		modelBee.position = glm::vec3(0.01f,0.0f,0.0f);
+		modelBee.position = glm::vec3(0.0f,0.0f,0.01f);
 
 		modelBee.Render(shader);
 		modelHive.Render(shader);
