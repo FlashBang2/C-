@@ -61,16 +61,18 @@ int main() {
 	modelHive.loadModel("models/hive/hive.gltf");
 	modelTree.flip = true;
 	modelTree.loadModel("models/Tree.fbx");
-	modelSunAndMoon.flip = true;
-	modelSunAndMoon.loadModel("models/SunAndMoon.fbx");
+	/*modelSunAndMoon.flip = true;
+	modelSunAndMoon.loadModel("models/SunAndMoon.fbx");*/
 	modelFloor.flip = true;
 	modelFloor.loadModel("models/Floor/floor.gltf");
 
 	modelFloor.position = glm::vec3(0.0f, -5.0f, 0.0f);
-	modelFloor.size = glm::vec3(50.0f, 50.0f, 50.0f);
+	modelFloor.size = glm::vec3(70.0f, 70.0f, 70.0f);
 
-	modelSunAndMoon.position = glm::vec3(0.0f, 10.0f, 0.0f);
+	/*/modelSunAndMoon.radians = 90.0f
 	modelSunAndMoon.size = glm::vec3(5.0f, 5.0f, 5.0f);
+	modelSunAndMoon.position = glm::vec3(0.0f, -10.0f, 0.0f);
+	modelSunAndMoon.rotation = glm::vec3(0.0f, 0.0f, 0.0f);*/
 
 	//modelTree.rotation = glm::vec3(0.0f, 0.0f, 90.0f);
 	modelTree.position = glm::vec3(5.0f, -5.0f, 0.0f);
@@ -83,6 +85,8 @@ int main() {
 	modelFlower.position = glm::vec3(0.0f, -5.0f, 15.0f);
 	modelFlower.size = glm::vec3(0.5f, 0.5f, 0.5f);
 
+	/*modelBee.radians = 180.0f;
+	modelBee.rotation = glm::vec3(0.0f, 0.0f, 45.0f);*/
 	modelBee.position = glm::vec3(0.0f, 4.5f, 0.0f);
 	modelBee.size = glm::vec3(0.2f, 0.2f, 0.2f);
 
@@ -100,8 +104,17 @@ int main() {
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, LightPosition);
 
+	float counter = 0.0f;
+	float timeOfDay = 0.0f;
+	float multiplier = 10.0f;
+	float ammountOfFlowers = 9;
+
+	float redSaturation = 4.0f;
+	float greenSaturation = 4.0f;
+	float blueSaturation = 4.0f;
+
 	shader.setVec3("lightPosition", LightPosition);
-	shader.setVec4("lightColor", glm::vec4(5.0f, 5.0f, 5.0f, 0.0f));
+	shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -127,6 +140,25 @@ int main() {
 			shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
 			shader.setMat4("finalBonesNormal[" + std::to_string(i) + "]", glm::inverseTranspose(transforms[i]));
 		}
+
+		//Day Night cycle
+		if (timeOfDay < 36000.0f / multiplier) {
+			timeOfDay++;
+			redSaturation -= 0.00016f * multiplier;
+			greenSaturation -= 0.0001f * multiplier;
+			blueSaturation -= 0.00002f * multiplier;
+		}
+		else if (timeOfDay >= 36000.0f / multiplier && timeOfDay < 72000.0f / multiplier) {
+			timeOfDay++;
+			redSaturation += 0.00016f * multiplier;
+			greenSaturation += 0.0001f * multiplier;
+			blueSaturation += 0.00002f * multiplier;
+		}
+		else {
+			timeOfDay = 0.0f;
+		}
+
+		shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
 
 		modelBee.Render(shader);
 		modelFlower.Render(shader);
