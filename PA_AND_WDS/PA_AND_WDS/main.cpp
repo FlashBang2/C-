@@ -53,28 +53,28 @@ int main() {
 
 	Shader shader("VertexShader.glsl", "FragmentShader.glsl");
 
-	Model model,model2,model3,model4,model5,model6;
-	model.loadModel("models/Bee.fbx");
-	model2.flip = true;
-	model2.loadModel("models/flower.fbx");
-	model3.flip = true;
-	model3.loadModel("models/hive/hive.gltf");
-	model4.flip = true;
-	model4.loadModel("models/Tree.fbx");
-	model5.flip = true;
-	model5.loadModel("models/SunAndMoon.fbx");
-	model6.flip = true;
-	model6.loadModel("models/Floor/floor.gltf");
+	Model modelBee,modelFlower,modelHive,modelTree,modelSunAndMoon,modelFloor;
+	modelBee.loadModel("models/Bee.fbx");
+	modelFlower.flip = true;
+	modelFlower.loadModel("models/flower.fbx");
+	modelHive.flip = true;
+	modelHive.loadModel("models/hive/hive.gltf");
+	modelTree.flip = true;
+	modelTree.loadModel("models/Tree.fbx");
+	modelSunAndMoon.flip = true;
+	modelSunAndMoon.loadModel("models/SunAndMoon.fbx");
+	modelFloor.flip = true;
+	modelFloor.loadModel("models/Floor/floor.gltf");
 
-	model.position = glm::vec3(0.0f, 0.0f, 5.0f);
-	model3.position = glm::vec3(0.0f, 0.0f, 10.0f);
-	model4.position = glm::vec3(5.0f,0.0f, 0.0f);
-	model4.rotation = glm::vec3(0.0f,0.0f,1.0f);
-	model4.radians = 180.0f;
-	model5.position = glm::vec3(0.0f, 5.0f, 0.0f);
-	model6.size = glm::vec3(5.0f, 5.0f, 5.0f);
+	modelBee.position = glm::vec3(0.0f, 0.0f, 5.0f);
+	modelHive.position = glm::vec3(0.0f, 0.0f, 10.0f);
+	modelTree.position = glm::vec3(5.0f,0.0f, 0.0f);
+	modelTree.rotation = glm::vec3(0.0f,0.0f,1.0f);
+	modelTree.radians = 180.0f;
+	modelSunAndMoon.position = glm::vec3(0.0f, 5.0f, 0.0f);
+	modelFloor.size = glm::vec3(5.0f, 5.0f, 5.0f);
 
-	Animation animation("models/Bee.fbx", &model);
+	Animation animation("models/Bee.fbx", &modelBee);
 
 	Animator animator(&animation);
 
@@ -116,12 +116,12 @@ int main() {
 			shader.setMat4("finalBonesNormal[" + std::to_string(i) + "]", glm::inverseTranspose(transforms[i]));
 		}
 
-		model.Render(shader);
-		model2.Render(shader);
-		model3.Render(shader);
-		model4.Render(shader);
-		model5.Render(shader);
-		model6.Render(shader);
+		modelBee.Render(shader);
+		modelFlower.Render(shader);
+		modelHive.Render(shader);
+		modelTree.Render(shader);
+		modelSunAndMoon.Render(shader);
+		modelFloor.Render(shader);
 
 		shader.setVec3("cameraPosition", glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
 
@@ -134,7 +134,12 @@ int main() {
 		glfwPollEvents();
 	}
 
-	model.Cleanup();
+	modelBee.Cleanup();
+	modelFlower.Cleanup();
+	modelHive.Cleanup();
+	modelTree.Cleanup();
+	modelSunAndMoon.Cleanup();
+	modelFloor.Cleanup();
 
 	glfwDestroyWindow(window);
 
