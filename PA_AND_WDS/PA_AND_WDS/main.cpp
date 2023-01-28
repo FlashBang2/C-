@@ -66,13 +66,25 @@ int main() {
 	modelFloor.flip = true;
 	modelFloor.loadModel("models/Floor/floor.gltf");
 
-	modelBee.position = glm::vec3(0.0f, 0.0f, 5.0f);
-	modelHive.position = glm::vec3(0.0f, 0.0f, 10.0f);
-	modelTree.position = glm::vec3(5.0f,0.0f, 0.0f);
-	modelTree.rotation = glm::vec3(0.0f,0.0f,1.0f);
-	modelTree.radians = 180.0f;
-	modelSunAndMoon.position = glm::vec3(0.0f, 5.0f, 0.0f);
-	modelFloor.size = glm::vec3(5.0f, 5.0f, 5.0f);
+	modelFloor.position = glm::vec3(0.0f, -5.0f, 0.0f);
+	modelFloor.size = glm::vec3(50.0f, 50.0f, 50.0f);
+
+	modelSunAndMoon.position = glm::vec3(0.0f, 10.0f, 0.0f);
+	modelSunAndMoon.size = glm::vec3(5.0f, 5.0f, 5.0f);
+
+	//modelTree.rotation = glm::vec3(0.0f, 0.0f, 90.0f);
+	modelTree.position = glm::vec3(5.0f, -5.0f, 0.0f);
+	modelTree.size = glm::vec3(2.0f, 2.0f, 2.0f);
+
+	modelHive.rotation = glm::vec3(0.0f, 0.0f, 180.0f);
+	modelHive.position = glm::vec3(0.0f, 4.5f, 0.0f);
+	modelHive.size = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	modelFlower.position = glm::vec3(0.0f, -5.0f, 15.0f);
+	modelFlower.size = glm::vec3(0.5f, 0.5f, 0.5f);
+
+	modelBee.position = glm::vec3(0.0f, 4.5f, 0.0f);
+	modelBee.size = glm::vec3(0.2f, 0.2f, 0.2f);
 
 	Animation animation("models/Bee.fbx", &modelBee);
 
