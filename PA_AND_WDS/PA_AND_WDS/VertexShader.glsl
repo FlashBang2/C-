@@ -23,7 +23,10 @@ uniform mat4 finalBonesNormal[MAX_BONES];
 void main() {
 
 	vec4 totalPosition = vec4(0.0);
+	mat4 viewMatrix = camMatrix * model;
 	int counter = 0;
+	normal = Normal;
+	texCoord = TexCoord;
 	for (int i = 0; i < MAX_BONE_INFLUENCE; i++) {
 		if (boneIds[i] == -1) {
 			counter++;
@@ -38,8 +41,6 @@ void main() {
 		localNormal = mat3(finalBonesNormal[boneIds[i]]) * Normal;
 		
 	}
-	mat4 viewMatrix = camMatrix * model;
-	texCoord = TexCoord;
 	if (counter == MAX_BONE_INFLUENCE) {
 		vec3 currentPosition = vec3(model * vec4(Position,1.0));
 		localNormal = currentPosition;

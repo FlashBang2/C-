@@ -16,7 +16,7 @@ vec4 directLight() {
 	float ambient = 0.20, specularLight = 0.50;
 
 	vec3 Normal = normalize(normal);
-	vec3 lightDirection = normalize(vec3(1.0, 1.0, 0.0));
+	vec3 lightDirection = normalize(vec3(0.5, 0.0, 0.5));
 	float diffuse = max(dot(Normal, lightDirection), 0.0);
 	vec3 viewDirection = normalize(cameraPosition - localNormal);
 	vec3 reflectionDirection = reflect(-lightDirection, Normal);
