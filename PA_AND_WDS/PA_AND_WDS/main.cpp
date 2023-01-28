@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_inverse.hpp>
+#include <random>
 
 #include "model.h"
 #include "Shader.h"
@@ -53,6 +54,7 @@ int main() {
 
 	Shader shader("VertexShader.glsl", "FragmentShader.glsl");
 
+	std::vector<Model> flowers;
 	Model modelBee,modelFlower,modelHive,modelTree,modelSunAndMoon,modelFloor;
 	modelBee.loadModel("models/Bee.fbx");
 	modelFlower.flip = true;
@@ -81,9 +83,6 @@ int main() {
 	modelHive.rotation = glm::vec3(0.0f, 0.0f, 180.0f);
 	modelHive.position = glm::vec3(0.0f, 4.5f, 0.0f);
 	modelHive.size = glm::vec3(1.0f, 1.0f, 1.0f);
-
-	modelFlower.position = glm::vec3(0.0f, -5.0f, 15.0f);
-	modelFlower.size = glm::vec3(0.5f, 0.5f, 0.5f);
 
 	/*modelBee.radians = 180.0f;
 	modelBee.rotation = glm::vec3(0.0f, 0.0f, 45.0f);*/
@@ -115,6 +114,15 @@ int main() {
 
 	shader.setVec3("lightPosition", LightPosition);
 	shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> distr(-30, 30);
+
+	for (unsigned int i = 0; i < 9;i++) {
+		modelFlower.position = glm::vec3((float)distr(gen), -5.0f, (float)distr(gen));
+		flowers.push_back(modelFlower);
+	}
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -160,12 +168,17 @@ int main() {
 
 		shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
 
+		modelBee.position = glm::vec3(0.01f,0.0f,0.0f);
+
 		modelBee.Render(shader);
-		modelFlower.Render(shader);
 		modelHive.Render(shader);
 		modelTree.Render(shader);
 		modelSunAndMoon.Render(shader);
 		modelFloor.Render(shader);
+
+		for (unsigned int i = 0; i < flowers.size();i++) {
+			flowers[i].Render(shader);
+		}
 
 		shader.setVec3("cameraPosition", glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
 
