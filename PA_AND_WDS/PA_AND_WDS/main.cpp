@@ -156,30 +156,41 @@ int main() {
 		//Day Night cycle
 		if (timeOfDay < 36000.0f / multiplier) {
 			timeOfDay++;
-			redSaturation -= 0.00008f * multiplier;
+			redSaturation -= 0.00007f * multiplier;
 			greenSaturation -= 0.00005f * multiplier;
 			blueSaturation -= 0.00001f * multiplier;
 		}
 		else if (timeOfDay >= 36000.0f / multiplier && timeOfDay < 72000.0f / multiplier) {
 			timeOfDay++;
-			redSaturation += 0.00008f * multiplier;
+			redSaturation += 0.00007f * multiplier;
 			greenSaturation += 0.00005f * multiplier;
 			blueSaturation += 0.00001f * multiplier;
 		}
 		else {
 			timeOfDay = 0.0f;
+			float redSaturation = 2.0f;
+			float greenSaturation = 2.0f;
+			float blueSaturation = 2.0f;
 		}
 
 		shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
 
+		modelBee.Render(shader);
+		modelHive.Render(shader);
+		modelTree.Render(shader);
+		modelSunAndMoon.Render(shader);
+		modelFloor.Render(shader);
+		for (unsigned int i = 0; i < flowers.size(); i++) {
+			flowers[i].Render(shader);
+		}
 
 		if (counter < 1000.0f / multiplier) {
-		counter += 1.0f;
-		modelBee.position = glm::vec3(0.0f * multiplier, 0.0f * multiplier, 0.025f * multiplier);
+			counter += 1.0f;
+			modelBee.position = glm::vec3(0.0f, 0.0f, 0.025f * multiplier);
 		}
 		else if (counter >= 1000.0f / multiplier && counter < 3000.0f / multiplier) {
 			counter += 1.0f;
-			modelBee.position = glm::vec3(0.0f * multiplier, -0.0135f * multiplier, 0.025f * multiplier);
+			modelBee.position = glm::vec3(0.0f, -0.0135f * multiplier, 0.025f * multiplier);
 		}
 		else if (counter >= 3000.0f / multiplier && counter < 4000.0f / multiplier) {
 			counter += 1.0f;
@@ -190,30 +201,19 @@ int main() {
 				beeForward = false;
 			}
 			counter += 1.0f;
-			modelBee.position = glm::vec3(-0.0f * multiplier, +0.0135f * multiplier, 0.025f * multiplier);
-
+			modelBee.position = glm::vec3(0.0f, 0.0135f * multiplier, 0.025f * multiplier);
 		}
 		else if (counter >= 6000.0f / multiplier && counter < 7000.0f / multiplier) {
 			counter += 1.0f;
-			modelBee.position = glm::vec3(0.0f * multiplier, 0.0f * multiplier, 0.025f * multiplier);
+			modelBee.position = glm::vec3(0.0f, 0.0f, 0.02525f * multiplier);
 		}
 		else if (counter >= 7000.0f / multiplier && counter < 8000.0f / multiplier) {
 			counter += 1.0f;
 		}
 		else {
-			counter = 0.0f;
+			counter = 1.0f;
 			modelBee.size = glm::vec3(1.0f, 1.0f, -1.0f);
 			beeForward = true;
-		}
-
-		modelBee.Render(shader);
-		modelHive.Render(shader);
-		modelTree.Render(shader);
-		modelSunAndMoon.Render(shader);
-		modelFloor.Render(shader);
-
-		for (unsigned int i = 0; i < flowers.size();i++) {
-			flowers[i].Render(shader);
 		}
 
 		shader.setVec3("cameraPosition", glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
