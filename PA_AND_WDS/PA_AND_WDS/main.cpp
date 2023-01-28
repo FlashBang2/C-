@@ -71,10 +71,9 @@ int main() {
 	modelFloor.position = glm::vec3(0.0f, -9.5f, 0.0f);
 	modelFloor.size = glm::vec3(70.0f, 70.0f, 70.0f);
 
-	modelSunAndMoon.radians = 10.0f;
 	modelSunAndMoon.size = glm::vec3(5.0f, 5.0f, 5.0f);
 	modelSunAndMoon.position = glm::vec3(0.0f, -14.5f, 0.0f);
-	modelSunAndMoon.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+	modelSunAndMoon.rotation = glm::vec3(1.0f, 0.0f, 0.0f);
 
 	//modelTree.rotation = glm::vec3(0.0f, 0.0f, 90.0f);
 	modelTree.position = glm::vec3(5.0f, -9.5f, 0.0f);
@@ -173,6 +172,7 @@ int main() {
 			float blueSaturation = 2.0f;
 		}
 
+		modelSunAndMoon.radians = (360.0f/72000.0f)*multiplier;
 		shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
 
 		modelBee.Render(shader);
