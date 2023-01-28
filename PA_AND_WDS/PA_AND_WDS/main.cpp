@@ -64,7 +64,7 @@ int main() {
 	model5.flip = true;
 	model5.loadModel("models/SunAndMoon.fbx");
 	model6.flip = true;
-	model6.loadModel("models/Floor.fbx");
+	model6.loadModel("models/Floor/floor.gltf");
 
 	model.position = glm::vec3(0.0f, 0.0f, 5.0f);
 	model3.position = glm::vec3(0.0f, 0.0f, 10.0f);
