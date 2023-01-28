@@ -71,7 +71,7 @@ int main() {
 	modelFloor.position = glm::vec3(0.0f, -9.5f, 0.0f);
 	modelFloor.size = glm::vec3(70.0f, 70.0f, 70.0f);
 
-	modelSunAndMoon.radians = 1.0f;
+	modelSunAndMoon.radians = 10.0f;
 	modelSunAndMoon.size = glm::vec3(5.0f, 5.0f, 5.0f);
 	modelSunAndMoon.position = glm::vec3(0.0f, -14.5f, 0.0f);
 	modelSunAndMoon.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -80,12 +80,12 @@ int main() {
 	modelTree.position = glm::vec3(5.0f, -9.5f, 0.0f);
 	modelTree.size = glm::vec3(2.0f, 2.0f, 2.0f);
 
-	modelHive.rotation = glm::vec3(0.0f, 0.0f, 180.0f);
-	modelHive.position = glm::vec3(0.0f, 0.0f, 0.0f);
+	modelHive.radians = 180.0f;
+	modelHive.rotation = glm::vec3(0.0f, 0.0f, 1.0f);
+	modelHive.position = glm::vec3(0.0f, 0.2f, 0.0f);
 	modelHive.size = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	/*modelBee.radians = 180.0f;
-	modelBee.rotation = glm::vec3(0.0f, 0.0f, 45.0f);*/
+	//modelBee.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 	modelBee.size = glm::vec3(0.2f, 0.2f, 0.2f);
 
 	Animation animation("models/Bee.fbx", &modelBee);
@@ -107,9 +107,11 @@ int main() {
 	float multiplier = 10.0f;
 	float ammountOfFlowers = 9;
 
-	float redSaturation = 4.0f;
-	float greenSaturation = 4.0f;
-	float blueSaturation = 4.0f;
+	float redSaturation = 2.0f;
+	float greenSaturation = 2.0f;
+	float blueSaturation = 2.0f;
+
+	bool beeForward = true;
 
 	shader.setVec3("lightPosition", LightPosition);
 	shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
@@ -119,7 +121,10 @@ int main() {
 	std::uniform_int_distribution<> distr(-30, 30);
 
 	for (unsigned int i = 0; i < 9;i++) {
-		modelFlower.position = glm::vec3((float)distr(gen), -9.5f, (float)distr(gen));
+		if(i==1)
+			modelFlower.position = glm::vec3(0.0f, -9.5f, 15.0f);
+		else
+			modelFlower.position = glm::vec3((float)distr(gen), -9.5f, (float)distr(gen));
 		flowers.push_back(modelFlower);
 	}
 
@@ -151,15 +156,15 @@ int main() {
 		//Day Night cycle
 		if (timeOfDay < 36000.0f / multiplier) {
 			timeOfDay++;
-			redSaturation -= 0.00016f * multiplier;
-			greenSaturation -= 0.0001f * multiplier;
-			blueSaturation -= 0.00002f * multiplier;
+			redSaturation -= 0.00008f * multiplier;
+			greenSaturation -= 0.00005f * multiplier;
+			blueSaturation -= 0.00001f * multiplier;
 		}
 		else if (timeOfDay >= 36000.0f / multiplier && timeOfDay < 72000.0f / multiplier) {
 			timeOfDay++;
-			redSaturation += 0.00016f * multiplier;
-			greenSaturation += 0.0001f * multiplier;
-			blueSaturation += 0.00002f * multiplier;
+			redSaturation += 0.00008f * multiplier;
+			greenSaturation += 0.00005f * multiplier;
+			blueSaturation += 0.00001f * multiplier;
 		}
 		else {
 			timeOfDay = 0.0f;
@@ -167,7 +172,39 @@ int main() {
 
 		shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
 
-		modelBee.position = glm::vec3(0.0f,0.0f,0.01f);
+
+		if (counter < 1000.0f / multiplier) {
+		counter += 1.0f;
+		modelBee.position = glm::vec3(0.0f * multiplier, 0.0f * multiplier, 0.025f * multiplier);
+		}
+		else if (counter >= 1000.0f / multiplier && counter < 3000.0f / multiplier) {
+			counter += 1.0f;
+			modelBee.position = glm::vec3(0.0f * multiplier, -0.0135f * multiplier, 0.025f * multiplier);
+		}
+		else if (counter >= 3000.0f / multiplier && counter < 4000.0f / multiplier) {
+			counter += 1.0f;
+		}
+		else if (counter >= 4000.0f / multiplier && counter < 6000.0f / multiplier) {
+			if (beeForward) {
+				modelBee.size = glm::vec3(1.0f, 1.0f, -1.0f);
+				beeForward = false;
+			}
+			counter += 1.0f;
+			modelBee.position = glm::vec3(-0.0f * multiplier, +0.0135f * multiplier, 0.025f * multiplier);
+
+		}
+		else if (counter >= 6000.0f / multiplier && counter < 7000.0f / multiplier) {
+			counter += 1.0f;
+			modelBee.position = glm::vec3(0.0f * multiplier, 0.0f * multiplier, 0.025f * multiplier);
+		}
+		else if (counter >= 7000.0f / multiplier && counter < 8000.0f / multiplier) {
+			counter += 1.0f;
+		}
+		else {
+			counter = 0.0f;
+			modelBee.size = glm::vec3(1.0f, 1.0f, -1.0f);
+			beeForward = true;
+		}
 
 		modelBee.Render(shader);
 		modelHive.Render(shader);
