@@ -41,7 +41,9 @@ void main() {
 	mat4 viewMatrix = camMatrix * model;
 	texCoord = TexCoord;
 	if (counter == MAX_BONE_INFLUENCE) {
-		gl_Position = projection * viewMatrix * vec4(Position, 1.0);
+		vec3 currentPosition = vec3(model * vec4(Position,1.0));
+		localNormal = currentPosition;
+		gl_Position = projection * camMatrix * vec4(currentPosition, 1.0);
 	}
 	else {
 		gl_Position = projection * viewMatrix * totalPosition;
