@@ -148,6 +148,34 @@ int main() {
 		projection = glm::perspective(glm::radians(45.0f), (float)camera.width / camera.height, 0.1f, 500.0f);
 		shader.setMat4("projection", projection);
 
+		modelSunAndMoon.Render(shader);
+		modelFloor.Render(shader);
+
+		for (unsigned int i = 0; i < flowers.size(); i++) {
+			flowers[i].Render(shader);
+		}
+
+		//Bee Yellow Texture apply
+		if (counter < 3000.0f / multiplier)
+			modelBee.Render(shader);
+		if (counter > 13000.0f / multiplier)
+			modelBee.Render(shader);
+
+		modelHive.Render(shader);
+		//Tree Texture swaping
+		if (counter < 3000.0f / multiplier)
+			modelTree.Render(shader);
+		else if (counter >= 3000.0f / multiplier && counter < 6000.0f / multiplier)
+			modelTree.Render(shader, lighterTree);
+		else if (counter >= 6000.0f / multiplier && counter < 9000.0f / multiplier)
+			modelTree.Render(shader, darkerTree);
+		else if (counter >= 9000.0f / multiplier && counter < 12000.0f / multiplier)
+			modelTree.Render(shader);
+		else if (counter >= 12000.0f / multiplier && counter < 15000.0f / multiplier)
+			modelTree.Render(shader, darkerTree);
+		else if (counter >= 15000.0f / multiplier && counter < 17000.0f / multiplier)
+			modelTree.Render(shader, lighterTree);
+
 		auto transforms = animator.GetCalculatedBoneMatrix();
 		for (unsigned int i = 0; i < transforms.size(); i++) {
 			shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
@@ -176,34 +204,6 @@ int main() {
 
 		modelSunAndMoon.radians = (360.0f/72000.0f)*multiplier;
 		shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
-
-		//Bee Yellow Texture apply
-		if (counter < 3000.0f / multiplier)
-			modelBee.Render(shader);
-		if (counter > 13000.0f / multiplier) 
-			modelBee.Render(shader);
-
-		modelHive.Render(shader);
-		//Tree Texture swaping
-		if (counter < 3000.0f / multiplier)
-			modelTree.Render(shader);
-		else if (counter >= 3000.0f / multiplier && counter < 6000.0f / multiplier)
-			modelTree.Render(shader, lighterTree);
-		else if (counter >= 6000.0f / multiplier && counter < 9000.0f / multiplier)
-			modelTree.Render(shader, darkerTree);
-		else if (counter >= 9000.0f / multiplier && counter < 12000.0f / multiplier)
-			modelTree.Render(shader);
-		else if (counter >= 12000.0f / multiplier && counter < 15000.0f / multiplier)
-			modelTree.Render(shader, darkerTree);
-		else if (counter >= 15000.0f / multiplier && counter < 17000.0f / multiplier)
-			modelTree.Render(shader, lighterTree);
-		
-		modelSunAndMoon.Render(shader);
-		modelFloor.Render(shader);
-
-		for (unsigned int i = 0; i < flowers.size(); i++) {
-			flowers[i].Render(shader);
-		}
 
 		//Bee Flying animation
 		if (counter < 1000.0f / multiplier) {
