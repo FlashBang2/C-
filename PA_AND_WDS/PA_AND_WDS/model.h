@@ -24,11 +24,11 @@ public:
 	glm::vec3 position;
 	glm::vec3 size;
 	glm::vec3 rotation;
-	bool flip = false;
+	bool flip = true;
 	float radians;
 
 	Model(glm::vec3 position = glm::vec3(0.0f), glm::vec3 size = glm::vec3(1.0f), glm::vec3 rotation = glm::normalize(glm::vec3(1.0f)), float radians = 0.0f);
-	void Render(Shader shaderProgram);
+	void Render(Shader shaderProgram, Texture swapTexture = Texture());
 	void Cleanup();
 	void loadModel(std::string path);
 	auto& GetBoneInfoMap() { return BoneInfoMap; }

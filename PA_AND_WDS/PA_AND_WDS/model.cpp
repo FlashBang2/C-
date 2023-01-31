@@ -17,7 +17,7 @@ void Model::loadModel(std::string path) {
 	processNode(scene->mRootNode, scene);
 }
 
-void Model::Render(Shader shaderProgram) {
+void Model::Render(Shader shaderProgram, Texture swapTexture) {
 	model = glm::translate(model, position);
 	model = glm::rotate(model, glm::radians(radians), rotation);
 	model = glm::scale(model, size);
@@ -27,7 +27,12 @@ void Model::Render(Shader shaderProgram) {
 	shaderProgram.setMat4("model", model);
 
 	for (Mesh mesh : meshes) {
-		mesh.Render(shaderProgram);
+		if (swapTexture.path == "")
+			mesh.Render(shaderProgram);
+		else {
+			mesh.textures[0] = (swapTexture);
+			mesh.Render(shaderProgram);
+		}	
 	}
 }
 

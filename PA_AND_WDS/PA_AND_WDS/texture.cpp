@@ -42,6 +42,8 @@ void Texture::load(bool flip) {
 	}
 
 	stbi_image_free(data);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Texture::load(unsigned int bufferSize, void* textureData) {
@@ -77,6 +79,7 @@ void Texture::load(unsigned int bufferSize, void* textureData) {
 
 	stbi_image_free(data);
 
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Texture::bind() {

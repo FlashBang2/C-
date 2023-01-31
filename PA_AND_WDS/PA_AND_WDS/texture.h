@@ -11,8 +11,9 @@ class Texture
 public:
 	unsigned int ID;
 	aiTextureType type;
-	std::string directory, path;
+	std::string directory, path = "";
 
+	Texture() {};
 	Texture(std::string directory, std::string path, aiTextureType type);
 	void generate();
 	void load(bool flip = false);
