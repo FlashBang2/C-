@@ -5,6 +5,7 @@ const unsigned int width = 1920;
 const unsigned int height = 1080;
 
 float gamma = 2.2f;
+float exposure = 0.2f;
 
 float framebufferVertices[] = {
 	 1.0f, -1.0f,  1.0f, 0.0f,
@@ -55,6 +56,7 @@ int main()
 	framebufferProgram.Activate();
 	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "screenTexture"), 0);
 	glUniform1f(glGetUniformLocation(framebufferProgram.ID, "gamma"), gamma);
+	glUniform1f(glGetUniformLocation(framebufferProgram.ID, "exposure"), exposure);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -100,6 +102,8 @@ int main()
 	float blueSaturation  = 2.0f;
 
 	bool isDay = true;
+
+	bool lookAtSky = false;
 
 	std::vector<glm::vec3> flowersPositions;
 

@@ -1,7 +1,6 @@
 #include"Texture.h"
 
-Texture::Texture(const char* image, const char* texType, GLuint slot)
-{
+Texture::Texture(const char* image, const char* texType, GLuint slot) {
 	type = texType;
 
 	int widthImg, heightImg, numColCh;
@@ -20,8 +19,7 @@ Texture::Texture(const char* image, const char* texType, GLuint slot)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	if (numColCh == 4)
-		glTexImage2D
-		(
+		glTexImage2D (
 			GL_TEXTURE_2D,
 			0,
 			GL_SRGB_ALPHA,
@@ -33,8 +31,7 @@ Texture::Texture(const char* image, const char* texType, GLuint slot)
 			bytes
 		);
 	else if (numColCh == 3)
-		glTexImage2D
-		(
+		glTexImage2D (
 			GL_TEXTURE_2D,
 			0,
 			GL_SRGB,
@@ -46,8 +43,7 @@ Texture::Texture(const char* image, const char* texType, GLuint slot)
 			bytes
 		);
 	else if (numColCh == 1)
-		glTexImage2D
-		(
+		glTexImage2D (
 			GL_TEXTURE_2D,
 			0,
 			GL_SRGB,
