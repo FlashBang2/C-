@@ -30,15 +30,6 @@
     <ClCompile Include="shader.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="VBO.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="EABO.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="VAO.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
     <ClCompile Include="stb.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
@@ -52,6 +43,15 @@
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="model.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="Bone.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,15 +71,6 @@
     <ClInclude Include="shader.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="VBO.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="EABO.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="VAO.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
     <ClInclude Include="texture.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
@@ -92,18 +83,23 @@
     <ClInclude Include="model.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.vert">
+    <None Include="FragmentShader.glsl" />
+    <None Include="VertexShader.glsl" />
+    <None Include="framebuffer.vert">
       <Filter>Pliki zasobów\Shaders</Filter>
     </None>
-    <None Include="default.frag">
-      <Filter>Pliki zasobów\Shaders</Filter>
-    </None>
-    <None Include="light.frag">
-      <Filter>Pliki zasobów\Shaders</Filter>
-    </None>
-    <None Include="light.vert">
+    <None Include="framebuffer.frag">
       <Filter>Pliki zasobów\Shaders</Filter>
     </None>
   </ItemGroup>

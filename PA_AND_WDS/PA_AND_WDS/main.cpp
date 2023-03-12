@@ -12,6 +12,16 @@
 const unsigned int userWidth = 1920;
 const unsigned int userHeight = 1080;
 
+float framebufferVertices[] = {
+	 1.0f, -1.0f,	1.0f, 0.0f,
+	-1.0f, -1.0f,	0.0f, 0.0f,
+	-1.0f,  1.0f,	0.0f, 1.0f,
+
+	 1.0f,  1.0f,	1.0f, 1.0f,
+	 1.0f, -1.0f,	1.0f, 0.0f,
+	-1.0f,  1.0f,	0.0f, 1.0f
+};
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 }
@@ -53,6 +63,22 @@ int main() {
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	Shader shader("VertexShader.glsl", "FragmentShader.glsl");
+	Shader framebufferProg("framebuffer.vert", "framebuffer.frag");
+
+	glm::vec3 LightPosition = glm::vec3(1.0f, 1.5f, 1.5f);
+	glm::mat4 lightModel = glm::mat4(1.0f);
+	lightModel = glm::translate(lightModel, LightPosition);
+
+	shader.activate();
+	framebufferProg.activate();
+	glUniform1i(glGetUniformLocation(framebufferProg.ID, "screenTexture"), 0);
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	glFrontFace(GL_CCW);
+
+	Camera camera(userWidth, userHeight, glm::vec3(0.0f, 0.0f, 3.0f));
 
 	std::vector<Model> flowers;
 	Model modelBee,modelFlower,modelHive,modelTree,modelSunAndMoon,modelFloor;
@@ -85,16 +111,6 @@ int main() {
 
 	Animator animator(&animation);
 
-	glEnable(GL_DEPTH_TEST);
-
-	Camera camera(userWidth, userHeight, glm::vec3(0.0f, 0.0f, 3.0f));
-
-	shader.activate();
-
-	glm::vec3 LightPosition = glm::vec3(1.0f, 1.5f, 1.5f);
-	glm::mat4 lightModel = glm::mat4(1.0f);
-	lightModel = glm::translate(lightModel, LightPosition);
-
 	float counter = 0.0f;
 	float timeOfDay = 0.0f;
 	float multiplier = 10.0f;
@@ -107,7 +123,7 @@ int main() {
 	bool beeForward = true;
 
 	shader.setVec3("lightPosition", LightPosition);
-	shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
+	shader.setVec4("lightModel", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -129,6 +145,41 @@ int main() {
 	lighterTree.load(true);
 	darkerTree.load(true);
 
+	unsigned int rectVAO, rectVBO;
+	glGenVertexArrays(1, &rectVAO);
+	glGenBuffers(1, &rectVBO);
+	glBindVertexArray(rectVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, rectVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(framebufferVertices), &framebufferVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+	unsigned int FBO;
+	glGenFramebuffers(1, &FBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
+	unsigned int framebufferTexture;
+	glGenTextures(1, &framebufferTexture);
+	glBindTexture(GL_TEXTURE_2D, framebufferTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, userWidth, userHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTexture, 0);
+
+	unsigned int RBO;
+	glGenRenderbuffers(1, &RBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, RBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, userWidth, userHeight);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
+
+	auto FBOError = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (FBOError != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "Framebuffer error:" << FBOError << std::endl;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentTime = glfwGetTime();
@@ -137,12 +188,12 @@ int main() {
 
 		animator.UpdateAnimation(deltaTime);
 
+		glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
 
 		camera.Inputs(window);
-
 		camera.updateMatrix();
 		glm::mat4 projection = glm::mat4(1.0f);
 		projection = glm::perspective(glm::radians(45.0f), (float)camera.width / camera.height, 0.1f, 500.0f);
@@ -203,7 +254,7 @@ int main() {
 		}
 
 		modelSunAndMoon.radians = (360.0f/72000.0f)*multiplier;
-		shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
+		shader.setVec4("lightModel", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
 
 		//Bee Flying animation
 		if (counter < 1000.0f / multiplier) {
@@ -260,6 +311,13 @@ int main() {
 		shader.setMat4("camMatrix", camera.cameraMatrix);
 
 		processInput(window);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		framebufferProg.activate();
+		glBindVertexArray(rectVAO);
+		glDisable(GL_DEPTH_TEST);
+		glBindTexture(GL_TEXTURE_2D, framebufferTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 		
 		glfwSwapBuffers(window);
 
@@ -273,6 +331,7 @@ int main() {
 	modelSunAndMoon.Cleanup();
 	modelFloor.Cleanup();
 
+	glDeleteFramebuffers(1, &FBO);
 	glfwDestroyWindow(window);
 
 	glfwTerminate();
