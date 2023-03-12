@@ -27,13 +27,7 @@
     <ClCompile Include="glad.c">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="shader.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
     <ClCompile Include="VBO.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="EABO.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="VAO.cpp">
@@ -54,6 +48,12 @@
     <ClCompile Include="model.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="EBO.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="shaderClass.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libraries\import\glad\glad.h">
@@ -68,13 +68,7 @@
     <ClInclude Include="libraries\import\KHR\khrplatform.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="shader.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
     <ClInclude Include="VBO.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="EABO.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="VAO.h">
@@ -92,6 +86,12 @@
     <ClInclude Include="model.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="EBO.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="shaderClass.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -100,10 +100,10 @@
     <None Include="default.frag">
       <Filter>Pliki zasobów\Shaders</Filter>
     </None>
-    <None Include="light.frag">
+    <None Include="framebuffer.frag">
       <Filter>Pliki zasobów\Shaders</Filter>
     </None>
-    <None Include="light.vert">
+    <None Include="framebuffer.vert">
       <Filter>Pliki zasobów\Shaders</Filter>
     </None>
   </ItemGroup>
