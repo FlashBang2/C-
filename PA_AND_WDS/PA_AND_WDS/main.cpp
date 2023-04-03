@@ -44,6 +44,7 @@ int main()
 
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader framebufferProgram("framebuffer.vert", "framebuffer.frag");
+	Shader blurringProgram("framebuffer.vert", "blur.frag");
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(1.0f, 1.5f, 1.5f);
@@ -55,8 +56,11 @@ int main()
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	framebufferProgram.Activate();
 	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "screenTexture"), 0);
+	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "bloomTexture"), 1);
 	glUniform1f(glGetUniformLocation(framebufferProgram.ID, "gamma"), gamma);
 	glUniform1f(glGetUniformLocation(framebufferProgram.ID, "exposure"), exposure);
+	blurringProgram.Activate();
+	glUniform1i(glGetUniformLocation(blurringProgram.ID, "screenTexture"), 0);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -146,9 +150,41 @@ int main()
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
 
+	unsigned int bloomTexture;
+	glGenTextures(1, &bloomTexture);
+	glBindTexture(GL_TEXTURE_2D, bloomTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bloomTexture, 0);
+
+	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, attachments);
+
 	auto FBOError = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (FBOError != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "Framebuffer error: " << FBOError << std::endl;
+
+	unsigned int pingpongFBO[2];
+	unsigned int pingpongBuffer[2];
+	glGenFramebuffers(2, pingpongFBO);
+	glGenTextures(2, pingpongBuffer);
+	for (unsigned int i = 0; i < 2; i++) {
+		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
+		glBindTexture(GL_TEXTURE_2D, pingpongBuffer[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongBuffer[i], 0);
+
+		FBOError = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (FBOError != GL_FRAMEBUFFER_COMPLETE)
+			std::cout << "Ping-Pong Framebuffer error: " << FBOError << std::endl;
+	}
 
 	while (!glfwWindowShouldClose(window)){
 
@@ -169,6 +205,27 @@ int main()
 		modelTree.Draw(shaderProgram, camera, glm::vec3(-5.0f, 31.0f, 18.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(7.0f, 7.0f, 7.0f));
 		modelSunAndMoon.Draw(shaderProgram, camera, glm::vec3(0.0f, 0.0f, 0.0f), sunAndMoonRotation, glm::vec3(10.0f, 20.0f, 10.0f));
 		modelFloor.Draw(shaderProgram, camera, glm::vec3(0.0f, 0.3f, 0.0f));
+
+		bool horizontal = true, firstIteration = true;
+		int blurAmount = 3;
+		blurringProgram.Activate();
+		for (unsigned int i = 0; i < blurAmount; i++) {
+			glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+			glUniform1i(glGetUniformLocation(blurringProgram.ID, "horizontal"), horizontal);
+
+			if (firstIteration) {
+				glBindTexture(GL_TEXTURE_2D, bloomTexture);
+				firstIteration = false;
+			}
+			else {
+				glBindTexture(GL_TEXTURE_2D, pingpongBuffer[!horizontal]);
+			}
+			glBindVertexArray(rectVAO);
+			glDisable(GL_DEPTH_TEST);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			horizontal = !horizontal;
+		}
 
 		//Day Night cycle
 		if (timeOfDay < 31000.0f / multiplier) {
@@ -262,7 +319,10 @@ int main()
 		framebufferProgram.Activate();
 		glBindVertexArray(rectVAO);
 		glDisable(GL_DEPTH_TEST);
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, framebufferTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, pingpongBuffer[!horizontal]);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		
 		glfwSwapBuffers(window);

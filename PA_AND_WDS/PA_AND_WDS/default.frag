@@ -1,6 +1,7 @@
 #version 330 core
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BloomColor;
 
 in vec3 crntPos;
 in vec3 Normal;
@@ -13,9 +14,7 @@ uniform vec4 lightColor;
 uniform vec3 lightPos;
 uniform vec3 camPos;
 
-vec4 pointLight()
-{	
-
+vec4 pointLight() {
 	vec3 lightVec = lightPos - crntPos;
 
 	float dist = length(lightVec);
@@ -38,8 +37,7 @@ vec4 pointLight()
 	return (texture(diffuse0, texCoord) * (diffuse * inten + ambient) + texture(specular0, texCoord).r * specular * inten) * lightColor;
 }
 
-vec4 direcLight()
-{
+vec4 direcLight() {
 	float ambient = 0.20f;
 
 	vec3 normal = normalize(Normal);
@@ -55,8 +53,7 @@ vec4 direcLight()
 	return (texture(diffuse0, texCoord) * (diffuse + ambient) + texture(specular0, texCoord).r * specular) * lightColor;
 }
 
-vec4 spotLight()
-{
+vec4 spotLight() {
 	float outerCone = 0.90f;
 	float innerCone = 0.95f;
 
@@ -79,7 +76,16 @@ vec4 spotLight()
 }
 
 
-void main()
-{
+void main() {
 	FragColor = direcLight();
+
+	//Bloom configuration below
+	if (FragColor.g > 0.05f)
+		FragColor.g /= 2.0f;
+
+	float brightness = dot(FragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
+    if(brightness > 0.2f)
+        BloomColor = vec4(FragColor.rgb, 1.0f);
+    else
+        BloomColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 }

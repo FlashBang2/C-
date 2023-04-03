@@ -190,6 +190,7 @@
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="blur.frag" />
     <None Include="default.frag" />
     <None Include="default.vert" />
     <None Include="framebuffer.frag" />

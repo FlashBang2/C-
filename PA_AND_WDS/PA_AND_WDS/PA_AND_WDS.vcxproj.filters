@@ -106,5 +106,8 @@
     <None Include="framebuffer.vert">
       <Filter>Pliki zasobów\Shaders</Filter>
     </None>
+    <None Include="blur.frag">
+      <Filter>Pliki zasobów\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
