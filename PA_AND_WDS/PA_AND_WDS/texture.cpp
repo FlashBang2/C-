@@ -17,11 +17,13 @@ void Texture::load(bool flip) {
 	unsigned char* data = stbi_load((directory + "/" + path).c_str(), &width, &height, &nChannels, 0);
 
 	GLenum colorMode = GL_RGB;
+	GLenum internals = GL_SRGB;
 	switch (nChannels) {
 	case 1:
-		colorMode = GL_RED;
+		internals = colorMode = GL_RED;
 		break;
 	case 4:
+		internals = GL_SRGB_ALPHA;
 		colorMode = GL_RGBA;
 		break;
 		
@@ -29,7 +31,7 @@ void Texture::load(bool flip) {
 
 	if (data) {
 		glBindTexture(GL_TEXTURE_2D, ID);
-		glTexImage2D(GL_TEXTURE_2D, 0, colorMode, width, height, 0, colorMode, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, internals, width, height, 0, colorMode, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

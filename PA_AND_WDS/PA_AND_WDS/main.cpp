@@ -12,16 +12,6 @@
 const unsigned int userWidth = 1920;
 const unsigned int userHeight = 1080;
 
-float framebufferVertices[] = {
-	 1.0f, -1.0f,	1.0f, 0.0f,
-	-1.0f, -1.0f,	0.0f, 0.0f,
-	-1.0f,  1.0f,	0.0f, 1.0f,
-
-	 1.0f,  1.0f,	1.0f, 1.0f,
-	 1.0f, -1.0f,	1.0f, 0.0f,
-	-1.0f,  1.0f,	0.0f, 1.0f
-};
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 }
@@ -58,12 +48,11 @@ int main() {
 		return -1;
 	}
 
-	glViewport(0, 0, userWidth, userHeight);
-
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	Shader shader("VertexShader.glsl", "FragmentShader.glsl");
-	Shader framebufferProg("framebuffer.vert", "framebuffer.frag");
+	Shader HDRshader("VertexHDR.glsl", "FragmentHDR.glsl");
+	/*Shader framebufferProg("framebuffer.vert", "framebuffer.frag");
 
 	glm::vec3 LightPosition = glm::vec3(1.0f, 1.5f, 1.5f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
@@ -78,7 +67,7 @@ int main() {
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
 
-	Camera camera(userWidth, userHeight, glm::vec3(0.0f, 0.0f, 3.0f));
+	Camera camera(userWidth, userHeight, glm::vec3(0.0f, 0.0f, 3.0f));*/
 
 	std::vector<Model> flowers;
 	Model modelBee,modelFlower,modelHive,modelTree,modelSunAndMoon,modelFloor;
@@ -89,6 +78,9 @@ int main() {
 	modelTree.loadModel("models/Tree.fbx");
 	modelSunAndMoon.loadModel("models/SunAndMoon.fbx");
 	modelFloor.loadModel("models/Floor/floor.gltf");
+
+	unsigned int hdrFBO;
+	glGenFramebuffers(1, &hdrFBO);
 
 	modelFloor.position = glm::vec3(0.0f, -9.5f, 0.0f);
 	modelFloor.size = glm::vec3(70.0f, 70.0f, 70.0f);
@@ -109,6 +101,16 @@ int main() {
 
 	Animation animation("models/Bee.fbx", &modelBee);
 
+	glEnable(GL_DEPTH_TEST);
+
+	Camera camera(userWidth, userHeight, glm::vec3(0.0f, 0.0f, 3.0f));
+
+	shader.activate();
+
+	glm::vec3 LightPosition = glm::vec3(1.0f, 1.5f, 1.5f);
+	glm::mat4 lightModel = glm::mat4(1.0f);
+	lightModel = glm::translate(lightModel, LightPosition);
+
 	Animator animator(&animation);
 
 	float counter = 0.0f;
@@ -123,7 +125,7 @@ int main() {
 	bool beeForward = true;
 
 	shader.setVec3("lightPosition", LightPosition);
-	shader.setVec4("lightModel", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
+	shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -145,7 +147,7 @@ int main() {
 	lighterTree.load(true);
 	darkerTree.load(true);
 
-	unsigned int rectVAO, rectVBO;
+	/*unsigned int rectVAO, rectVBO;
 	glGenVertexArrays(1, &rectVAO);
 	glGenBuffers(1, &rectVBO);
 	glBindVertexArray(rectVAO);
@@ -178,7 +180,7 @@ int main() {
 
 	auto FBOError = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (FBOError != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "Framebuffer error:" << FBOError << std::endl;
+		std::cout << "Framebuffer error:" << FBOError << std::endl;*/
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -188,10 +190,10 @@ int main() {
 
 		animator.UpdateAnimation(deltaTime);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+		/*glBindFramebuffer(GL_FRAMEBUFFER, FBO);*/
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
+		/*glEnable(GL_DEPTH_TEST);*/
 
 		camera.Inputs(window);
 		camera.updateMatrix();
@@ -254,7 +256,7 @@ int main() {
 		}
 
 		modelSunAndMoon.radians = (360.0f/72000.0f)*multiplier;
-		shader.setVec4("lightModel", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
+		shader.setVec4("lightColor", glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f));
 
 		//Bee Flying animation
 		if (counter < 1000.0f / multiplier) {
@@ -312,12 +314,12 @@ int main() {
 
 		processInput(window);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		/*glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		framebufferProg.activate();
 		glBindVertexArray(rectVAO);
 		glDisable(GL_DEPTH_TEST);
 		glBindTexture(GL_TEXTURE_2D, framebufferTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawArrays(GL_TRIANGLES, 0, 6);*/
 		
 		glfwSwapBuffers(window);
 
@@ -331,7 +333,7 @@ int main() {
 	modelSunAndMoon.Cleanup();
 	modelFloor.Cleanup();
 
-	glDeleteFramebuffers(1, &FBO);
+	/*glDeleteFramebuffers(1, &FBO);*/
 	glfwDestroyWindow(window);
 
 	glfwTerminate();

@@ -190,9 +190,9 @@
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="FragmentHDR.glsl" />
     <None Include="FragmentShader.glsl" />
-    <None Include="framebuffer.frag" />
-    <None Include="framebuffer.vert" />
+    <None Include="VertexHDR.glsl" />
     <None Include="VertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
