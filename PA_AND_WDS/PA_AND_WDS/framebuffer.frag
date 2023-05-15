@@ -5,12 +5,14 @@ in vec2 texCoords;
 
 uniform sampler2D screenTexture;
 uniform sampler2D bloomTexture;
+uniform sampler2D streakTexture;
 uniform float gamma;
 uniform float exposure;
 
 void main() {
     vec3 fragment = texture(screenTexture, texCoords).rgb;
     vec3 bloom = texture(bloomTexture, texCoords).rgb;
+    vec3 streak = texture(streakTexture, texCoords).rgb;
 
     vec3 color = fragment + bloom;
 

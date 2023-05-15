@@ -109,5 +109,24 @@
     <None Include="blur.frag">
       <Filter>Pliki zasobów\Shaders</Filter>
     </None>
+    <None Include="models\Sun\Sun.bin">
+      <Filter>Pliki zasobów</Filter>
+    </None>
+    <None Include="models\Sun\Sun.gltf" />
+    <None Include="models\Moon\Moon.bin">
+      <Filter>Pliki zasobów</Filter>
+    </None>
+    <None Include="models\Moon\Moon.gltf" />
+    <None Include="streak.frag">
+      <Filter>Pliki zasobów\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="models\Sun\baseColor.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="models\Moon\baseColor.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
   </ItemGroup>
 </Project>

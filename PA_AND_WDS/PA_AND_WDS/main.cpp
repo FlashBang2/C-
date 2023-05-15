@@ -19,7 +19,6 @@ float framebufferVertices[] = {
 
 int main()
 {
-
 	glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -42,14 +41,31 @@ int main()
 
 	glViewport(0, 0, width, height);
 
+	std::string modelBeePath = "models/Bee/bee.gltf";
+	std::string modelFlowerPath = "models/Flower/flower.gltf";
+	std::string modelHivePath = "models/Hive/hive.gltf";
+	std::string modelTreePath = "models/Tree/tree.gltf";
+	std::string modelSunPath = "models/Sun/sun.gltf";
+	std::string modelMoonPath = "models/Moon/moon.gltf";
+	std::string modelFloorPath = "models/Floor/floor.gltf";
+
+	Model modelBee(modelBeePath.c_str());
+	Model modelFlower(modelFlowerPath.c_str());
+	Model modelHive(modelHivePath.c_str());
+	Model modelTree(modelTreePath.c_str());
+	Model modelSun(modelSunPath.c_str());
+	Model modelMoon(modelMoonPath.c_str());
+	Model modelFloor(modelFloorPath.c_str());
+
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader framebufferProgram("framebuffer.vert", "framebuffer.frag");
 	Shader blurringProgram("framebuffer.vert", "blur.frag");
+	Shader streakingProgram("framebuffer.vert", "streak.frag");
 
+	float lightAngle1 = 0.0f;
+	float lightAngle2 = -1.0f;
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(1.0f, 1.5f, 1.5f);
-	/*glm::mat4 lightModel = glm::mat4(1.0f);
-	lightModel = glm::translate(lightModel, lightPos);*/
+	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	shaderProgram.Activate();
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
@@ -61,6 +77,8 @@ int main()
 	glUniform1f(glGetUniformLocation(framebufferProgram.ID, "exposure"), exposure);
 	blurringProgram.Activate();
 	glUniform1i(glGetUniformLocation(blurringProgram.ID, "screenTexture"), 0);
+	streakingProgram.Activate();
+	glUniform1i(glGetUniformLocation(streakingProgram.ID, "screenTexture"), 0);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -68,23 +86,8 @@ int main()
 
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
-	std::string modelBeePath = "models/Bee/bee.gltf";
-	std::string modelFlowerPath = "models/Flower/flower.gltf";
-	std::string modelHivePath = "models/Hive/hive.gltf";
-	std::string modelTreePath = "models/Tree/tree.gltf";
-	std::string modelSunAndMoonPath = "models/SunAndMoon/SunAndMoon.gltf";
-	std::string modelFloorPath = "models/Floor/floor.gltf";
-	
-	Model modelBee(modelBeePath.c_str());
-	Model modelFlower(modelFlowerPath.c_str());
-	Model modelHive(modelHivePath.c_str());
-	Model modelTree(modelTreePath.c_str());
-	Model modelSunAndMoon(modelSunAndMoonPath.c_str());
-	Model modelFloor(modelFloorPath.c_str());
-
 	glm::vec3 beeTrajectory = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::quat beeRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-	glm::quat sunAndMoonRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 	
 	float XDegrees = -0.10f, YDegrees = 0.10f, ZDegrees = -20.0f;
 
@@ -92,18 +95,16 @@ int main()
 	beeRotation = glm::rotate(beeRotation, YDegrees, glm::vec3(0.0f, 1.0f, 0.0f));		//Y
 	beeRotation = glm::rotate(beeRotation, ZDegrees, glm::vec3(0.0f, 0.0f, 1.0f));		//Z
 
-	sunAndMoonRotation = glm::rotate(sunAndMoonRotation, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));		//X
-	sunAndMoonRotation = glm::rotate(sunAndMoonRotation, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));		//Y
-	sunAndMoonRotation = glm::rotate(sunAndMoonRotation, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));		//Z
-
 	float counter = 0.0f;
 	float timeOfDay = 0.0f;
-	float multiplier = 10.0f;
+	float multiplier = 100.0f;
 	float ammountOfFlowers = 9;
+	float sunAndMoonAxis1 = 0;
+	float sunAndMoonAxis2 = -200;
 
 	float redSaturation   = 2.0f;
 	float greenSaturation = 2.0f;
-	float blueSaturation  = 2.0f;
+	float blueSaturation  = 1.8f;
 
 	bool isDay = true;
 
@@ -187,9 +188,8 @@ int main()
 	}
 
 	while (!glfwWindowShouldClose(window)){
-
 		glBindFramebuffer(GL_FRAMEBUFFER, FBO);
-		glClearColor(pow(0.07f, gamma), pow(0.13f, gamma), pow(0.17f, gamma), 1.0f);
+		glClearColor(pow(0.005f, gamma), pow(0.013f, gamma), pow(0.017f, gamma), 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 
@@ -203,12 +203,19 @@ int main()
 		}
 		modelHive.Draw(shaderProgram, camera, glm::vec3(-1.7f, 0.0f, 0.0f));
 		modelTree.Draw(shaderProgram, camera, glm::vec3(-5.0f, 31.0f, 18.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(7.0f, 7.0f, 7.0f));
-		modelSunAndMoon.Draw(shaderProgram, camera, glm::vec3(0.0f, 0.0f, 0.0f), sunAndMoonRotation, glm::vec3(10.0f, 20.0f, 10.0f));
+		modelSun.Draw(shaderProgram, camera, glm::vec3(sunAndMoonAxis1, sunAndMoonAxis2, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f));
+		modelMoon.Draw(shaderProgram, camera, glm::vec3(-sunAndMoonAxis1, -sunAndMoonAxis2, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f));
 		modelFloor.Draw(shaderProgram, camera, glm::vec3(0.0f, 0.3f, 0.0f));
+
+		glUniform1f(glGetUniformLocation(shaderProgram.ID, "lightAngle1"), lightAngle1);
+		glUniform1f(glGetUniformLocation(shaderProgram.ID, "lightAngle2"), lightAngle2);
+		glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 
 		bool horizontal = true, firstIteration = true;
 		int blurAmount = 3;
-		blurringProgram.Activate();
+		//Na razie tylko jeden na raz mo¿e dzia³aæ
+		//blurringProgram.Activate();
+		streakingProgram.Activate();
 		for (unsigned int i = 0; i < blurAmount; i++) {
 			glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
 			glUniform1i(glGetUniformLocation(blurringProgram.ID, "horizontal"), horizontal);
@@ -230,27 +237,44 @@ int main()
 		//Day Night cycle
 		if (timeOfDay < 31000.0f / multiplier) {
 			timeOfDay++;
-			redSaturation   -= 0.00008f * multiplier;
-			greenSaturation -= 0.00006f * multiplier;
-			blueSaturation  -= 0.00002f * multiplier;
+			redSaturation -= 0.000064f * multiplier;
+			greenSaturation -= 0.000062f * multiplier;
+			blueSaturation  -= 0.000045f * multiplier;
+			if (timeOfDay < 15500.0f / multiplier) {
+				lightAngle1 += 1.0f / 15500.0f * multiplier;
+				sunAndMoonAxis1 += 200.0f / 15500.0f * multiplier;
+				lightAngle2 += 1.0f / 15500.0f * multiplier;
+				sunAndMoonAxis2 += 200.0f / 15500.0f * multiplier;
+			}
+			else {
+				lightAngle1 -= 1.0f / 15500.0f * multiplier;
+				sunAndMoonAxis1 -= 200.0f / 15500.0f * multiplier;
+				lightAngle2 += 1.0f / 15500.0f * multiplier;
+				sunAndMoonAxis2 += 200.0f / 15500.0f * multiplier;
+			}
 		}
 		else if (timeOfDay >= 31000.0f / multiplier && timeOfDay < 62000.0f / multiplier) {
 			timeOfDay++;
-			redSaturation   += 0.00008f * multiplier;
-			greenSaturation += 0.00006f * multiplier;
-			blueSaturation  += 0.00002f * multiplier;
+			redSaturation += 0.000064f * multiplier;
+			greenSaturation += 0.000062f * multiplier;
+			blueSaturation  += 0.000045f * multiplier;
+			if (timeOfDay < 46500.0f / multiplier) {
+				lightAngle1 -= 1.0f / 15500.0f * multiplier;
+				sunAndMoonAxis1 -= 200.0f / 15500.0f * multiplier;
+				lightAngle2 -= 1.0f / 15500.0f * multiplier;
+				sunAndMoonAxis2 -= 200.0f / 15500.0f * multiplier;
+			}
+			else {
+				lightAngle1 += 1.0f / 15500.0f * multiplier;
+				sunAndMoonAxis1 += 200.0f / 15500.0f * multiplier;
+				lightAngle2 -= 1.0f / 15500.0f * multiplier;
+				sunAndMoonAxis2 -= 200.0f / 15500.0f * multiplier;
+			}
 		}
 		else {
 			timeOfDay = 0.0f;
 		}
-		XDegrees = 0.0000f * multiplier;
-		YDegrees = 0.0000f * multiplier;
-		ZDegrees = 0.0001f * multiplier;
-		sunAndMoonRotation = glm::rotate(sunAndMoonRotation, XDegrees, glm::vec3(1.0f, 0.0f, 0.0f));		//X
-		sunAndMoonRotation = glm::rotate(sunAndMoonRotation, YDegrees, glm::vec3(0.0f, 1.0f, 0.0f));		//Y
-		sunAndMoonRotation = glm::rotate(sunAndMoonRotation, ZDegrees, glm::vec3(0.0f, 0.0f, 1.0f));		//Z
 		lightColor = glm::vec4(redSaturation, greenSaturation, blueSaturation, 1.0f);
-		glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 		
 		if (counter < 3000.0f / multiplier) {
 			if (counter >= 2900.0f / multiplier && counter < 3000.0f / multiplier) {
