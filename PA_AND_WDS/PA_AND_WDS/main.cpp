@@ -57,7 +57,8 @@ int main()
 	Model modelMoon(modelMoonPath.c_str());
 	Model modelFloor(modelFloorPath.c_str());
 
-	Shader shaderProgram("default.vert", "default.frag");
+	Shader shaderProgram( "default.vert", "default.frag" );
+	Shader SunAndMoonProgram( "default.vert", "SunAndMoon.frag" );
 	Shader framebufferProgram("framebuffer.vert", "framebuffer.frag");
 	Shader blurringProgram("framebuffer.vert", "blur.frag");
 	Shader streakingProgram("framebuffer.vert", "streak.frag");
@@ -69,7 +70,10 @@ int main()
 
 	shaderProgram.Activate();
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	glUniform3f( glGetUniformLocation( shaderProgram.ID, "lightPos" ), lightPos.x, lightPos.y, lightPos.z );
+	SunAndMoonProgram.Activate();
+	glUniform4f( glGetUniformLocation( SunAndMoonProgram.ID, "lightColor" ), lightColor.x, lightColor.y, lightColor.z, lightColor.w );
+	glUniform3f( glGetUniformLocation( SunAndMoonProgram.ID, "lightPos" ), lightPos.x, lightPos.y, lightPos.z );
 	framebufferProgram.Activate();
 	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "screenTexture"), 0);
 	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "bloomTexture"), 1);
@@ -203,8 +207,8 @@ int main()
 		}
 		modelHive.Draw(shaderProgram, camera, glm::vec3(-1.7f, 0.0f, 0.0f));
 		modelTree.Draw(shaderProgram, camera, glm::vec3(-5.0f, 31.0f, 18.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(7.0f, 7.0f, 7.0f));
-		modelSun.Draw(shaderProgram, camera, glm::vec3(sunAndMoonAxis1, sunAndMoonAxis2, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f));
-		modelMoon.Draw(shaderProgram, camera, glm::vec3(-sunAndMoonAxis1, -sunAndMoonAxis2, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f));
+		modelSun.Draw( SunAndMoonProgram, camera, glm::vec3(sunAndMoonAxis1, sunAndMoonAxis2, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f));
+		modelMoon.Draw( SunAndMoonProgram, camera, glm::vec3(-sunAndMoonAxis1, -sunAndMoonAxis2, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f));
 		modelFloor.Draw(shaderProgram, camera, glm::vec3(0.0f, 0.3f, 0.0f));
 
 		glUniform1f(glGetUniformLocation(shaderProgram.ID, "lightAngle1"), lightAngle1);
@@ -213,7 +217,7 @@ int main()
 
 		bool horizontal = true, firstIteration = true;
 		int blurAmount = 3;
-		//Na razie tylko jeden na raz mo¿e dzia³aæ
+		//Tylko jeden na raz mo¿e dzia³aæ
 		//blurringProgram.Activate();
 		streakingProgram.Activate();
 		for (unsigned int i = 0; i < blurAmount; i++) {

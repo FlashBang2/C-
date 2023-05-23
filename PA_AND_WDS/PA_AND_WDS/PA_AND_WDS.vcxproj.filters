@@ -120,6 +120,7 @@
     <None Include="streak.frag">
       <Filter>Pliki zasobów\Shaders</Filter>
     </None>
+    <None Include="SunAndMoon.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="models\Sun\baseColor.png">

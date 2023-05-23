@@ -200,6 +200,7 @@
     <None Include="models\Sun\Sun.bin" />
     <None Include="models\Sun\Sun.gltf" />
     <None Include="streak.frag" />
+    <None Include="SunAndMoon.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="models\Moon\baseColor.png" />
