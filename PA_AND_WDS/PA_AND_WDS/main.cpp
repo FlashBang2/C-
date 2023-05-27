@@ -101,7 +101,7 @@ int main()
 
 	float counter = 0.0f;
 	float timeOfDay = 0.0f;
-	float multiplier = 100.0f;
+	float multiplier = 5.0f;
 	float ammountOfFlowers = 9;
 	float sunAndMoonAxis1 = 0;
 	float sunAndMoonAxis2 = -200;
