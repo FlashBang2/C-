@@ -220,7 +220,7 @@ int main()
 		//Tylko jeden na raz mo¿e dzia³aæ
 		//blurringProgram.Activate();
 		streakingProgram.Activate();
-		for (unsigned int i = 0; i < blurAmount; i++) {
+		for (int i = 0; i < blurAmount; i++) {
 			glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
 			glUniform1i(glGetUniformLocation(blurringProgram.ID, "horizontal"), horizontal);
 
