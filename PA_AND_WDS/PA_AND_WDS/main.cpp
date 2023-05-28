@@ -41,6 +41,41 @@ int main()
 
 	glViewport(0, 0, width, height);
 
+	Shader shaderProgram("default.vert", "default.frag");
+	Shader SunAndMoonProgram("default.vert", "SunAndMoon.frag");
+	Shader framebufferProgram("framebuffer.vert", "framebuffer.frag");
+	Shader blurringProgram("framebuffer.vert", "blur.frag");
+	Shader streakingProgram("framebuffer.vert", "streak.frag");
+
+	float lightAngle1 = 0.0f;
+	float lightAngle2 = -1.0f;
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	shaderProgram.Activate();
+	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	SunAndMoonProgram.Activate();
+	glUniform4f(glGetUniformLocation(SunAndMoonProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(SunAndMoonProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	framebufferProgram.Activate();
+	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "screenTexture"), 0);
+	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "bloomTexture"), 1);
+	glUniform1f(glGetUniformLocation(framebufferProgram.ID, "gamma"), gamma);
+	glUniform1f(glGetUniformLocation(framebufferProgram.ID, "exposure"), exposure);
+	blurringProgram.Activate();
+	glUniform1i(glGetUniformLocation(blurringProgram.ID, "screenTexture"), 0);
+	streakingProgram.Activate();
+	glUniform1i(glGetUniformLocation(streakingProgram.ID, "screenTexture"), 0);
+
+	float redSaturation = 2.0f;
+	float greenSaturation = 2.0f;
+	float blueSaturation = 1.8f;
+
+	glEnable(GL_FRAMEBUFFER_SRGB);
+
+	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+
 	std::string modelBeePath = "models/Bee/bee.gltf";
 	std::string modelFlowerPath = "models/Flower/flower.gltf";
 	std::string modelHivePath = "models/Hive/hive.gltf";
@@ -57,39 +92,6 @@ int main()
 	Model modelMoon(modelMoonPath.c_str());
 	Model modelFloor(modelFloorPath.c_str());
 
-	Shader shaderProgram( "default.vert", "default.frag" );
-	Shader SunAndMoonProgram( "default.vert", "SunAndMoon.frag" );
-	Shader framebufferProgram("framebuffer.vert", "framebuffer.frag");
-	Shader blurringProgram("framebuffer.vert", "blur.frag");
-	Shader streakingProgram("framebuffer.vert", "streak.frag");
-
-	float lightAngle1 = 0.0f;
-	float lightAngle2 = -1.0f;
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
-
-	shaderProgram.Activate();
-	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f( glGetUniformLocation( shaderProgram.ID, "lightPos" ), lightPos.x, lightPos.y, lightPos.z );
-	SunAndMoonProgram.Activate();
-	glUniform4f( glGetUniformLocation( SunAndMoonProgram.ID, "lightColor" ), lightColor.x, lightColor.y, lightColor.z, lightColor.w );
-	glUniform3f( glGetUniformLocation( SunAndMoonProgram.ID, "lightPos" ), lightPos.x, lightPos.y, lightPos.z );
-	framebufferProgram.Activate();
-	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "screenTexture"), 0);
-	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "bloomTexture"), 1);
-	glUniform1f(glGetUniformLocation(framebufferProgram.ID, "gamma"), gamma);
-	glUniform1f(glGetUniformLocation(framebufferProgram.ID, "exposure"), exposure);
-	blurringProgram.Activate();
-	glUniform1i(glGetUniformLocation(blurringProgram.ID, "screenTexture"), 0);
-	streakingProgram.Activate();
-	glUniform1i(glGetUniformLocation(streakingProgram.ID, "screenTexture"), 0);
-
-	glEnable(GL_DEPTH_TEST);
-
-	glEnable(GL_FRAMEBUFFER_SRGB);
-
-	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
-
 	glm::vec3 beeTrajectory = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::quat beeRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 	
@@ -105,10 +107,6 @@ int main()
 	float ammountOfFlowers = 9;
 	float sunAndMoonAxis1 = 0;
 	float sunAndMoonAxis2 = -200;
-
-	float redSaturation   = 2.0f;
-	float greenSaturation = 2.0f;
-	float blueSaturation  = 1.8f;
 
 	bool isDay = true;
 
@@ -207,8 +205,8 @@ int main()
 		}
 		modelHive.Draw(shaderProgram, camera, glm::vec3(-1.7f, 0.0f, 0.0f));
 		modelTree.Draw(shaderProgram, camera, glm::vec3(-5.0f, 31.0f, 18.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(7.0f, 7.0f, 7.0f));
-		modelSun.Draw( SunAndMoonProgram, camera, glm::vec3(sunAndMoonAxis1, sunAndMoonAxis2, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f));
-		modelMoon.Draw( SunAndMoonProgram, camera, glm::vec3(-sunAndMoonAxis1, -sunAndMoonAxis2, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f));
+		modelSun.Draw(SunAndMoonProgram, camera, glm::vec3(sunAndMoonAxis1, sunAndMoonAxis2, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f));
+		modelMoon.Draw(SunAndMoonProgram, camera, glm::vec3(-sunAndMoonAxis1, -sunAndMoonAxis2, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f));
 		modelFloor.Draw(shaderProgram, camera, glm::vec3(0.0f, 0.3f, 0.0f));
 
 		glUniform1f(glGetUniformLocation(shaderProgram.ID, "lightAngle1"), lightAngle1);

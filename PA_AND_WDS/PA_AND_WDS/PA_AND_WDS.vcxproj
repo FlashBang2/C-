@@ -195,16 +195,8 @@
     <None Include="default.vert" />
     <None Include="framebuffer.frag" />
     <None Include="framebuffer.vert" />
-    <None Include="models\Moon\Moon.bin" />
-    <None Include="models\Moon\Moon.gltf" />
-    <None Include="models\Sun\Sun.bin" />
-    <None Include="models\Sun\Sun.gltf" />
     <None Include="streak.frag" />
     <None Include="SunAndMoon.frag" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="models\Moon\baseColor.png" />
-    <Image Include="models\Sun\baseColor.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
