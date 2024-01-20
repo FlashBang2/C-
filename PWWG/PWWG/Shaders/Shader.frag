@@ -90,29 +90,30 @@ vec3 calculateSpotLight(SpotLight spotLight, vec3 Normal, vec3 FragmentPosition,
 {
 	vec3 lightDirection = normalize(spotLight.position - FragmentPosition);
 
-	float theta = dot(lightDirection, normalize(-spotLight.direction));
-
 	vec3 ambient = spotLight.ambient * texture(material.diffuse, TextureCoordinates).rgb;
 	vec3 diffuse = vec3(0.0f, 0.0f, 0.0f);
 	vec3 specular = vec3(0.0f, 0.0f, 0.0f);
 
-	if (theta > spotLight.cutOff) 
-	{
-		vec3 normal = normalize(Normal);
-		float diffrence = max(dot(normal, lightDirection), 0.0f);
-		diffuse = spotLight.diffuse * diffrence * texture(material.diffuse, TextureCoordinates).rgb;
+	vec3 normal = normalize(Normal);
+	float diffrence = max(dot(normal, lightDirection), 0.0f);
+	diffuse = spotLight.diffuse * diffrence * texture(material.diffuse, TextureCoordinates).rgb;
 
-		vec3 viewDirection = normalize(viewPosition - FragmentPosition);
-		vec3 reflectDirection = reflect(-lightDirection, normal);
-		float spec = pow(max(dot(viewDirection, reflectDirection), 0.0f), material.shininess);
-		specular = spotLight.specular * spec * texture(material.specular, TextureCoordinates).rgb;
+	vec3 viewDirection = normalize(viewPosition - FragmentPosition);
+	vec3 reflectDirection = reflect(-lightDirection, normal);
+	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0f), material.shininess);
+	specular = spotLight.specular * spec * texture(material.specular, TextureCoordinates).rgb;
 
-		float distance = length(spotLight.position - FragmentPosition);
-		float attenaution = 1.0f / (spotLight.constant + spotLight.linear * distance + spotLight.quadratic * (distance * distance));
+	float theta = dot(lightDirection, normalize(-spotLight.direction));
+	float epsilon = (spotLight.cutOff - spotLight.outerCutOff);
+	float intensity = clamp((theta - spotLight.outerCutOff) / epsilon, 0.0f, 1.0f);
+	diffuse *= intensity;
+	specular *= intensity;
 
-		diffuse *= attenaution;
-		specular *= attenaution;
-	}
+	float distance = length(spotLight.position - FragmentPosition);
+	float attenaution = 1.0f / (spotLight.constant + spotLight.linear * distance + spotLight.quadratic * (distance * distance));
+
+	diffuse *= attenaution;
+	specular *= attenaution;
 
 	return (ambient + diffuse + specular);
 }
