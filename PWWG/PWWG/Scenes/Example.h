@@ -9,7 +9,6 @@ class Example:public GenericScene
 		Example();
 
 		void Render(GLFWwindow* window, float deltaTime);
-		void Populate(void (*f)(unsigned int)) {};
 	private:
 		std::vector<glm::vec3> objectsPositions;
 };

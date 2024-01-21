@@ -3,6 +3,7 @@
 
 #include"../Button.h"
 #include"../Camera.h"
+#include"../Animator.h"
 
 class GenericScene
 {
@@ -17,6 +18,7 @@ class GenericScene
 		
 		virtual void Render(GLFWwindow* window, float deltaTime) {};
 	protected:
+		std::vector<Animator> animators;
 		std::vector<Shader> shaders;
 		std::vector<Model> models;
 		std::vector<glm::vec3> lightPositions;

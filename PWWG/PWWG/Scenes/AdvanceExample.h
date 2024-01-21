@@ -6,7 +6,7 @@
 class AdvanceExample:public GenericScene
 {
 	public:
-		AdvanceExample() {};
+		AdvanceExample();
 
 		void Render(GLFWwindow* window, float deltaTime);
 	private:

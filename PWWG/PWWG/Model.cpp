@@ -4,7 +4,7 @@ Model::Model(std::string path)
 {
 	Assimp::Importer importer;
 
-	const aiScene* scene = importer.ReadFile(path, aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_FlipUVs | aiProcess_Triangulate);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) 
 	{
@@ -22,6 +22,63 @@ void Model::Draw(Shader& shader)
 	for (int i = 0; i < meshes.size(); i++) 
 	{
 		meshes[i].Draw(shader);
+	}
+}
+
+void Model::SetVertexBoneWeightToDefault(Vertex& vertex)
+{
+	for (int i = 0; i < MAX_BONE_INFLUENCE; i++) 
+	{
+		vertex.boneIds[i] = -1;
+		vertex.weights[i] = 0.0f;
+	}
+}
+
+void Model::ExtractBoneWeights(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
+{
+	for (int i = 0; i < mesh->mNumBones; i++) 
+	{
+		int boneID = -1;
+		std::string boneName = mesh->mBones[i]->mName.C_Str();
+		if (bonesInfo.find(boneName) == bonesInfo.end())
+		{
+			BoneInfo boneInfo;
+			boneInfo.ID = currentBone;
+			boneInfo.offset = glm::mat4(mesh->mBones[i]->mOffsetMatrix.a1, mesh->mBones[i]->mOffsetMatrix.b1, mesh->mBones[i]->mOffsetMatrix.c1, mesh->mBones[i]->mOffsetMatrix.d1,
+				mesh->mBones[i]->mOffsetMatrix.a2, mesh->mBones[i]->mOffsetMatrix.b2, mesh->mBones[i]->mOffsetMatrix.c2, mesh->mBones[i]->mOffsetMatrix.d2,
+				mesh->mBones[i]->mOffsetMatrix.a3, mesh->mBones[i]->mOffsetMatrix.b3, mesh->mBones[i]->mOffsetMatrix.c3, mesh->mBones[i]->mOffsetMatrix.d3,
+				mesh->mBones[i]->mOffsetMatrix.a4, mesh->mBones[i]->mOffsetMatrix.b4, mesh->mBones[i]->mOffsetMatrix.c4, mesh->mBones[i]->mOffsetMatrix.d4);
+			bonesInfo[boneName] = boneInfo;
+			boneID = currentBone;
+			currentBone++;
+		}
+		else 
+		{
+			boneID = bonesInfo[boneName].ID;
+		}
+		if (boneID == -1) 
+		{
+			std::cout << "Error::Bone: Extracton of data failed!";
+			std::abort();
+		}
+		aiVertexWeight* weights = mesh->mBones[i]->mWeights;
+		GLuint numberOfWeights = mesh->mBones[i]->mNumWeights;
+
+		for (int j = 0; j < numberOfWeights; j++) 
+		{
+			unsigned int vertexID = weights[j].mVertexId;
+			float weight = weights[j].mWeight;
+
+			for (int k = 0; k < MAX_BONE_INFLUENCE; k++) 
+			{
+				if (vertices[vertexID].boneIds[k] < 0) 
+				{
+					vertices[vertexID].boneIds[k] = boneID;
+					vertices[vertexID].weights[k] = weight;
+					break;
+				}
+			}
+		}
 	}
 }
 
@@ -51,6 +108,8 @@ void Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	for (int i = 0; i < mesh->mNumVertices; i++) 
 	{
 		Vertex vertex;
+
+		SetVertexBoneWeightToDefault(vertex);
 	
 		position.x = mesh->mVertices[i].x;
 		position.y = mesh->mVertices[i].y;
@@ -89,6 +148,8 @@ void Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	setupTextures(aiTextureType_DIFFUSE, material);
 	setupTextures(aiTextureType_SPECULAR, material);
 
+	ExtractBoneWeights(vertices, mesh, scene);
+
 	meshes.push_back(Mesh(vertices, textures));
 }
 
@@ -106,17 +167,17 @@ void Model::setupTextures(aiTextureType type, aiMaterial* material)
 
 		unsigned char* imageData = stbi_load((diretory + "/" + path.C_Str()).c_str(), &width, &height, &numberOfChannels, 0);
 
-		GLenum format;
+		GLenum internalFormat;
 		switch (numberOfChannels)
 		{
 		case 1:
-			format = GL_RED;
+			internalFormat = GL_RED;
 			break;
 		case 3:
-			format = GL_RGB;
+			internalFormat = GL_RGB;
 			break;
 		case 4:
-			format = GL_RGBA;
+			internalFormat = GL_RGBA;
 			break;
 		}
 
@@ -124,7 +185,7 @@ void Model::setupTextures(aiTextureType type, aiMaterial* material)
 		glBindTexture(GL_TEXTURE_2D, id);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, imageData);
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, internalFormat, GL_UNSIGNED_BYTE, imageData);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

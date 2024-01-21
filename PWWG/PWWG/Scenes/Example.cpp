@@ -3,10 +3,10 @@
 Example::Example()
 	:objectsPositions{glm::vec3(0.0f, 0.0f, 0.0f),glm::vec3(0.0f, 2.0f, 0.0f)}
 {
-	Shader shader("Shaders/Shader.vert", "Shaders/Shader.frag");
+	Shader shader("Shaders/Mesh.vert", "Shaders/Mesh.frag");
 	Shader light("Shaders/Light.vert", "Shaders/Light.frag");
 
-	Camera camera(glm::vec3(0.0f, 0.0, 0.0f));
+	Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	Model box("Models/Box/box.obj");
 

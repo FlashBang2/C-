@@ -20,15 +20,12 @@ SceneManager::SceneManager(GLuint currentScene)
 
 void SceneManager::Render(GLFWwindow* window, float deltaTime)
 {
-	scenes[ID]->width = width;
-	scenes[ID]->height = height;
 	switch (ID) 
 	{
 		case 0:
 			scenes[0]->Render(window, deltaTime);
 			break;
 		case 1:
-			scenes[1]->flashlight = flashlight;
 			scenes[1]->Render(window, deltaTime);
 			break;
 		case 2:

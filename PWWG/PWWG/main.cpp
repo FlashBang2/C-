@@ -107,15 +107,17 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 	if (sceneManager.ID == 1) 
 	{
-		if (key == GLFW_KEY_F && action == GLFW_PRESS && sceneManager.flashlight)
+		if (key == GLFW_KEY_F && action == GLFW_PRESS)
 		{
-			sceneManager.flashlight = false;
-			return;
-		}
-		if (key == GLFW_KEY_F && action == GLFW_PRESS && !sceneManager.flashlight)
-		{
-			sceneManager.flashlight = true;
-			return;
+			switch (sceneManager.scenes[1]->flashlight) 
+			{
+				case true:
+					sceneManager.scenes[1]->flashlight = false;
+					break;
+				case false:
+					sceneManager.scenes[1]->flashlight = true;
+					break;
+			}
 		}
 	}
 }

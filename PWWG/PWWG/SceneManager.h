@@ -10,7 +10,6 @@ class SceneManager
 	public:
 		std::vector<GenericScene*> scenes;
 		GLuint ID;
-		bool flashlight;
 		int width = 800, height = 800;
 
 		SceneManager() {};

@@ -51,10 +51,19 @@
     <ClCompile Include="Button.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="Bone.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\Shader.vert" />
-    <None Include="Shaders\Shader.frag" />
+    <None Include="Shaders\Mesh.vert" />
+    <None Include="Shaders\Mesh.frag" />
     <None Include="Shaders\Light.vert" />
     <None Include="Shaders\Light.frag" />
     <None Include="Shaders\Cursor.vert" />
@@ -63,6 +72,8 @@
     <None Include="Shaders\Button.frag" />
     <None Include="Shaders\Text.vert" />
     <None Include="Shaders\Text.frag" />
+    <None Include="Shaders\AnimatedMesh.vert" />
+    <None Include="Shaders\AnimatedMesh.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -93,6 +104,15 @@
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>
