@@ -26,7 +26,7 @@ struct Texture {
 class Mesh
 {
 	public:
-		Mesh(std::vector<Vertex> Vertices, std::vector<Texture> textures);
+		Mesh(std::vector<Vertex> Vertices, std::vector<GLuint> Indices, std::vector<Texture> Textures);
 
 		void Draw(Shader& shader);
 		float CalculateCursorOffsetY();
@@ -37,6 +37,7 @@ class Mesh
 	private:
 		std::vector<Vertex> vertices;
 		std::vector<Texture> textures;
+		std::vector<GLuint> indices;
 		GLuint VAO;
 };
 

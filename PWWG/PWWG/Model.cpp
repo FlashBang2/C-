@@ -100,6 +100,7 @@ void Model::traverseNodes(aiNode* node, const aiScene* scene)
 void Model::processMesh(aiMesh* mesh, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
+	std::vector<GLuint> indicies;
 	glm::vec3 position;
 	glm::vec3 color;
 	glm::vec3 normal;
@@ -143,6 +144,14 @@ void Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		vertices.push_back(vertex);
 	}
 
+	for (GLuint i = 0; i < mesh->mNumFaces; i++) 
+	{
+		aiFace face = mesh->mFaces[i];
+		indicies.push_back(face.mIndices[0]);
+		indicies.push_back(face.mIndices[1]);
+		indicies.push_back(face.mIndices[2]);
+	}
+
 	aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
 	setupTextures(aiTextureType_DIFFUSE, material, scene);
@@ -150,7 +159,7 @@ void Model::processMesh(aiMesh* mesh, const aiScene* scene)
 
 	ExtractBoneWeights(vertices, mesh, scene);
 
-	meshes.push_back(Mesh(vertices, textures));
+	meshes.push_back(Mesh(vertices, indicies, textures));
 }
 
 void Model::setupTextures(aiTextureType type, aiMaterial* material, const aiScene* scene)

@@ -28,7 +28,8 @@ std::vector<struct Vertex> Vertex::genList(float* vertices, int noVertices) {
 }
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
-	:vertices(vertices), indcies(indices), textures(textures) {
+	:vertices(vertices), indcies(indices), textures(textures) 
+{
 	setup();
 }
 
