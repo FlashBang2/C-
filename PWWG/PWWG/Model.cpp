@@ -145,15 +145,15 @@ void Model::processMesh(aiMesh* mesh, const aiScene* scene)
 
 	aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-	setupTextures(aiTextureType_DIFFUSE, material);
-	setupTextures(aiTextureType_SPECULAR, material);
+	setupTextures(aiTextureType_DIFFUSE, material, scene);
+	setupTextures(aiTextureType_SPECULAR, material, scene);
 
 	ExtractBoneWeights(vertices, mesh, scene);
 
 	meshes.push_back(Mesh(vertices, textures));
 }
 
-void Model::setupTextures(aiTextureType type, aiMaterial* material)
+void Model::setupTextures(aiTextureType type, aiMaterial* material, const aiScene* scene)
 {
 	for (int i = 0; i < material->GetTextureCount(type); i++)
 	{
@@ -166,6 +166,12 @@ void Model::setupTextures(aiTextureType type, aiMaterial* material)
 		int width, height, numberOfChannels;
 
 		unsigned char* imageData = stbi_load((diretory + "/" + path.C_Str()).c_str(), &width, &height, &numberOfChannels, 0);
+
+		const aiTexture* embendedTexture = scene->GetEmbeddedTexture(path.C_Str());
+		if (embendedTexture) 
+		{
+			imageData = stbi_load_from_memory((const stbi_uc*)embendedTexture->pcData, embendedTexture->mWidth, &width, &height, &numberOfChannels, 0);
+		}
 
 		GLenum internalFormat;
 		switch (numberOfChannels)

@@ -78,7 +78,7 @@ void cursorPositionCallback(GLFWwindow* window, double posX, double posY)
 		sceneManager.scenes[0]->mouseX = posX;
 		sceneManager.scenes[0]->mouseY = posY;
 	}
-	if (sceneManager.ID == 1) 
+	if (sceneManager.ID == 1 || sceneManager.ID == 2) 
 	{
 		float xPosition = static_cast<float>(posX);
 		float yPosition = static_cast<float>(posY);
@@ -96,14 +96,19 @@ void cursorPositionCallback(GLFWwindow* window, double posX, double posY)
 		lastPositionX = xPosition;
 		lastPositionY = yPosition;
 
-		sceneManager.scenes[1]->cameras[0].HandleMouseMovment(xMouseOffset, yMouseOffset);
-		sceneManager.scenes[1]->cameras[0].Recalculate();
+		sceneManager.scenes[sceneManager.ID]->cameras[0].HandleMouseMovment(xMouseOffset, yMouseOffset);
+		sceneManager.scenes[sceneManager.ID]->cameras[0].Recalculate();
 	}
 }
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) sceneManager.ID = 0;
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) 
+	{
+		sceneManager.ID = 0;
+		glfwSetCursorPos(window, 0, 0);
+		cursorPositionCallback(window, 0, 0);
+	}
 
 	if (sceneManager.ID == 1) 
 	{
@@ -128,7 +133,7 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 
 	for (int i = 0; i < buttons.size(); i++)
 	{
-		if (buttons[i].state == HOVER && i == 0 && button == GLFW_MOUSE_BUTTON_LEFT) 
+		if (buttons[i].state == HOVER && i == 0 && button == GLFW_MOUSE_BUTTON_LEFT)
 		{
 			sceneManager.ID = 1;
 		}

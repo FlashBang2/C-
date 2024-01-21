@@ -33,7 +33,7 @@ class Model
 
 		void traverseNodes(aiNode* node, const aiScene* scene);
 		void processMesh(aiMesh* mesh, const aiScene* scene);
-		void setupTextures(aiTextureType type, aiMaterial* material);
+		void setupTextures(aiTextureType type, aiMaterial* material, const aiScene* scene);
 		void SetVertexBoneWeightToDefault(Vertex& vertex);
 		void ExtractBoneWeights(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene);
 };

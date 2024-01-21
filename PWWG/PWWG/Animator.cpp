@@ -1,8 +1,9 @@
 #include "Animator.h"
 
-Animator::Animator(Animation* Animation)
-	:currentTime(0.0f), animation(Animation)
+Animator::Animator(Animation Animation)
+	:currentTime(0.0f)
 {
+	animation = Animation;
 	for (int i = 0; i < 100; i++) 
 	{
 		finalBoneMatrices.push_back(glm::mat4(1.0f));
@@ -11,11 +12,11 @@ Animator::Animator(Animation* Animation)
 
 void Animator::UpdateAnimation(float deltaTime)
 {
-	if (animation) 
+	if (&animation) 
 	{
-		currentTime += animation->ticksPerSecond * deltaTime;
-		currentTime = fmod(currentTime, animation->duration);
-		CalculateFinalBoneMatrices(&animation->rootNode, glm::mat4(1.0f));
+		currentTime += animation.ticksPerSecond * deltaTime;
+		currentTime = fmod(currentTime, animation.duration);
+		CalculateFinalBoneMatrices(&animation.rootNode, glm::mat4(1.0f));
 	}
 }
 
@@ -24,7 +25,7 @@ void Animator::CalculateFinalBoneMatrices(const AssimpNodeData* node, glm::mat4 
 	std::string nodeName = node->name;
 	glm::mat4 nodeTransform = node->transformation;
 
-	Bone* Bone = animation->FindBone(nodeName);
+	Bone* Bone = animation.FindBone(nodeName);
 
 	if (Bone) 
 	{
@@ -34,7 +35,7 @@ void Animator::CalculateFinalBoneMatrices(const AssimpNodeData* node, glm::mat4 
 
 	glm::mat4 globalTransformation = parentMatrice * nodeTransform;
 
-	std::map<std::string, BoneInfo> boneInfoMap = animation->boneInfo;
+	std::map<std::string, BoneInfo> boneInfoMap = animation.boneInfo;
 
 	if (boneInfoMap.find(nodeName) != boneInfoMap.end()) 
 	{
@@ -47,7 +48,7 @@ void Animator::CalculateFinalBoneMatrices(const AssimpNodeData* node, glm::mat4 
 		CalculateFinalBoneMatrices(&node->children[i], globalTransformation);
 }
 
-void Animator::PlayAnimation(Animation* Animation)
+void Animator::PlayAnimation(Animation Animation)
 {
 	animation = Animation;
 	currentTime = 0.0f;

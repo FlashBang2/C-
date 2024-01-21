@@ -10,7 +10,7 @@ AdvanceExample::AdvanceExample()
 
 	Animation animation("Models/Bee/bee.fbx", &bee);
 
-	Animator animator(&animation);
+	Animator animator(animation);
 
 	projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 
@@ -30,12 +30,14 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 
 	shaders[0].Activate();
 
-	for (int i = 0; animators[0].finalBoneMatrices.size(); ++i)
+	animators[0].UpdateAnimation(deltaTime);
+
+	for (int i = 0; i < animators[0].finalBoneMatrices.size(); ++i)
 	{
 		shaders[0].SetMat4("finalBonesMatrices[" + std::to_string(i) + "]", animators[0].finalBoneMatrices[i]);
 	}
 
-	glm::mat4 mvp = glm::mat4(1.0f) * cameras[0].view * projection;
+	glm::mat4 mvp = projection * cameras[0].view * glm::mat4(1.0f);
 
 	shaders[0].SetMat4("mvp", mvp);
 

@@ -5,7 +5,7 @@ Bone::Bone(std::string Name, int id, const aiNodeAnim* channel)
 {
 	numberOfPositions = channel->mNumPositionKeys;
 
-	for (int i = 0; i < numberOfPositions; i++)
+	for (int i = 0; i < numberOfPositions; ++i)
 	{
 		aiVector3D aiPosition = channel->mPositionKeys[i].mValue;
 		float timeStamp = channel->mPositionKeys[i].mTime;
@@ -19,7 +19,7 @@ Bone::Bone(std::string Name, int id, const aiNodeAnim* channel)
 
 	numberOfRotations = channel->mNumRotationKeys;
 
-	for (int i = 0; i < numberOfRotations; i++)
+	for (int i = 0; i < numberOfRotations; ++i)
 	{
 		aiQuaternion aiOrientation = channel->mRotationKeys[i].mValue;
 		float timeStamp = channel->mRotationKeys[i].mTime;
@@ -28,12 +28,13 @@ Bone::Bone(std::string Name, int id, const aiNodeAnim* channel)
 		data.orientation.x = aiOrientation.x;
 		data.orientation.y = aiOrientation.y;
 		data.orientation.z = aiOrientation.z;
+		data.timeStamp = timeStamp;
 		rotations.push_back(data);
 	}
 
 	numberOfScales = channel->mNumScalingKeys;
 
-	for (int i = 0; i < numberOfScales; i++) 
+	for (int i = 0; i < numberOfScales; ++i) 
 	{
 		aiVector3D aiPosition = channel->mScalingKeys[i].mValue;
 		float timeStamp = channel->mScalingKeys[i].mTime;
@@ -41,6 +42,7 @@ Bone::Bone(std::string Name, int id, const aiNodeAnim* channel)
 		data.scale.x = aiPosition.x;
 		data.scale.y = aiPosition.y;
 		data.scale.z = aiPosition.z;
+		data.timeStamp = timeStamp;
 		scales.push_back(data);
 	}
 }
@@ -64,7 +66,7 @@ float Bone::getScaleFactor(float lastTimeStamp, float nextTimeStamp, float anima
 
 unsigned int Bone::getPositionIndex(float animationTime)
 {
-	for (int i = 0; i < numberOfPositions - 1; i++)
+	for (int i = 0; i < numberOfPositions - 1; ++i)
 	{
 		if (animationTime < positions[i + 1].timeStamp) return i;
 	}
@@ -72,7 +74,7 @@ unsigned int Bone::getPositionIndex(float animationTime)
 
 unsigned int Bone::getRotationIndex(float animationTime)
 {
-	for (int i = 0; i < numberOfRotations - 1; i++) 
+	for (int i = 0; i < numberOfRotations - 1; ++i) 
 	{
 		if (animationTime < rotations[i + 1].timeStamp) return i;
 	}
@@ -81,7 +83,7 @@ unsigned int Bone::getRotationIndex(float animationTime)
 
 unsigned int Bone::getScaleIndex(float animationTime)
 {
-	for (int i = 0; i < numberOfScales - 1; i++) 
+	for (int i = 0; i < numberOfScales - 1; ++i) 
 	{
 		if (animationTime < scales[i + 1].timeStamp) return i;
 	}

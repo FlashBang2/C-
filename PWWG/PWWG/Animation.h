@@ -22,6 +22,7 @@ class Animation
 
 		Animation() {};
 		Animation(std::string animationPath, Model* model);
+
 		Bone* FindBone(std::string name);
 	private:
 		std::vector<Bone> bones;

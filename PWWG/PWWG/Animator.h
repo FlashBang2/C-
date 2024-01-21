@@ -7,14 +7,14 @@ class Animator
 {
 	public:
 		std::vector<glm::mat4> finalBoneMatrices;
-
+		
 		Animator() {};
-		Animator(Animation* Animation);
+		Animator(Animation Animation);
 		void UpdateAnimation(float deltaTime);
 		void CalculateFinalBoneMatrices(const AssimpNodeData* node, glm::mat4 parentMatrice);
-		void PlayAnimation(Animation* Animation);
+		void PlayAnimation(Animation Animation);
 	private:
-		Animation* animation;
+		Animation animation;
 		float currentTime;
 };
 
