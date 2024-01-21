@@ -72,8 +72,8 @@ vec3 calculatePointLight(PointLight pointLight, vec3 Normal, vec3 FragmentPositi
 	vec3 diffuse = pointLight.diffuse * diffrence * texture(material.diffuse, TextureCoordinates).rgb;
 
 	vec3 viewDirection = normalize(viewPosition - FragmentPosition);
-	vec3 reflectDirection = reflect(-lightDirection, normal);
-	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0f), material.shininess);
+	vec3 halfwayDirection = normalize(lightDirection + viewDirection);
+	float spec = pow(max(dot(normal, halfwayDirection), 0.0f), material.shininess);
 	vec3 specular = pointLight.specular * spec * texture(material.specular, TextureCoordinates).rgb;
 
 	float distance = length(pointLight.position - FragmentPosition);
@@ -99,8 +99,8 @@ vec3 calculateSpotLight(SpotLight spotLight, vec3 Normal, vec3 FragmentPosition,
 	diffuse = spotLight.diffuse * diffrence * texture(material.diffuse, TextureCoordinates).rgb;
 
 	vec3 viewDirection = normalize(viewPosition - FragmentPosition);
-	vec3 reflectDirection = reflect(-lightDirection, normal);
-	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0f), material.shininess);
+	vec3 halfwayDirection = normalize(lightDirection + viewDirection);
+	float spec = pow(max(dot(normal, halfwayDirection), 0.0f), material.shininess);
 	specular = spotLight.specular * spec * texture(material.specular, TextureCoordinates).rgb;
 
 	float theta = dot(lightDirection, normalize(-spotLight.direction));
