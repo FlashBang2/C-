@@ -26,10 +26,11 @@ class Model
 		Model() {};
 		Model(std::string path);
 
-		void Draw(Shader& shader);
+		void Draw(Shader& shader, bool gammaCorrected);
 	private:
 		std::string diretory;
 		std::vector<Texture> textures;
+		std::vector<Texture> gammaCorrectedTextures;
 
 		void traverseNodes(aiNode* node, const aiScene* scene);
 		void processMesh(aiMesh* mesh, const aiScene* scene);

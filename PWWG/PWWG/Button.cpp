@@ -40,5 +40,5 @@ void Button::Render(Shader shader)
 			break;
 	}
 
-	buttonModel.Draw(shader);
+	buttonModel.Draw(shader, false);
 }

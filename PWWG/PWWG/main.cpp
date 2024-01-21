@@ -110,17 +110,29 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		cursorPositionCallback(window, 0, 0);
 	}
 
-	if (sceneManager.ID == 1) 
+	if (sceneManager.ID == 1 || sceneManager.ID == 2)
 	{
-		if (key == GLFW_KEY_F && action == GLFW_PRESS)
+		if (key == GLFW_KEY_G && action == GLFW_PRESS) 
 		{
-			switch (sceneManager.scenes[1]->flashlight) 
+			switch (sceneManager.scenes[sceneManager.ID]->gammaCorrection)
 			{
 				case true:
-					sceneManager.scenes[1]->flashlight = false;
+					sceneManager.scenes[sceneManager.ID]->gammaCorrection = false;
 					break;
 				case false:
-					sceneManager.scenes[1]->flashlight = true;
+					sceneManager.scenes[sceneManager.ID]->gammaCorrection = true;
+					break;
+			}
+		}	
+		if (key == GLFW_KEY_F && action == GLFW_PRESS)
+		{
+			switch (sceneManager.scenes[sceneManager.ID]->flashlight) 
+			{
+				case true:
+					sceneManager.scenes[sceneManager.ID]->flashlight = false;
+					break;
+				case false:
+					sceneManager.scenes[sceneManager.ID]->flashlight = true;
 					break;
 			}
 		}

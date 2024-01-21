@@ -1,7 +1,7 @@
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<Vertex> Vertices, std::vector<GLuint> Indices, std::vector<Texture> Textures)
-	:vertices(Vertices), indices(Indices), textures(Textures)
+Mesh::Mesh(std::vector<Vertex> Vertices, std::vector<GLuint> Indices, std::vector<Texture> Textures, std::vector<Texture> GammaCorrectedTextures)
+	:vertices(Vertices), indices(Indices), textures(Textures), gammaCorrectedTextures(GammaCorrectedTextures)
 {
 	GLuint VBO, EBO;
 	glGenVertexArrays(1, &VAO);
@@ -38,16 +38,29 @@ Mesh::Mesh(std::vector<Vertex> Vertices, std::vector<GLuint> Indices, std::vecto
 	glBindVertexArray(0);
 }
 
-void Mesh::Draw(Shader& shader)
+void Mesh::Draw(Shader& shader, bool gammaCorrected)
 {
-	for (int i = 0; i < textures.size(); i++) 
+	switch (gammaCorrected) 
 	{
-		glActiveTexture(GL_TEXTURE0 + i);
-		shader.SetInt("material." + textures[i].type, i);
+		case true:
+			for (int i = 0; i < gammaCorrectedTextures.size(); i++)
+			{
+				glActiveTexture(GL_TEXTURE0 + i);
+				shader.SetInt("material." + gammaCorrectedTextures[i].type, i);
 
-		glBindTexture(GL_TEXTURE_2D, textures[i].ID);
+				glBindTexture(GL_TEXTURE_2D, gammaCorrectedTextures[i].ID);
+			}
+			break;
+		case false:
+			for (int i = 0; i < textures.size(); i++)
+			{
+				glActiveTexture(GL_TEXTURE0 + i);
+				shader.SetInt("material." + textures[i].type, i);
+
+				glBindTexture(GL_TEXTURE_2D, textures[i].ID);
+			}
+			break;
 	}
-
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);

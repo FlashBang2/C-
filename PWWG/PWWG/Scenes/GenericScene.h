@@ -10,7 +10,7 @@ class GenericScene
 	public:
 		std::vector<Camera> cameras;
 		std::vector<Button> buttons;
-		bool flashlight;
+		bool flashlight, gammaCorrection;
 		int width = 800, height = 800;
 		double mouseX, mouseY;
 

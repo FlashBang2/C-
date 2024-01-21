@@ -37,9 +37,9 @@ void Example::Render(GLFWwindow* window, float deltaTime)
 	shaders[0].SetVec3("pointLight.ambient", 0.2f, 0.2f, 0.2f);
 	shaders[0].SetVec3("pointLight.diffuse", 0.7f, 0.7f, 0.7f);
 	shaders[0].SetVec3("pointLight.specular", 1.0f, 1.0f, 1.0f);
-	shaders[0].SetFloat("pointLight.constant", 1.0f);
-	shaders[0].SetFloat("pointLight.linear", 0.04f);
-	shaders[0].SetFloat("pointLight.quadratic", 0.016f);
+	shaders[0].SetFloat("pointLight.constant", gammaCorrection ? 2.0f : 1.0f);
+	shaders[0].SetFloat("pointLight.linear", gammaCorrection ? 0.08f : 0.04f);
+	shaders[0].SetFloat("pointLight.quadratic", gammaCorrection ? 0.032f : 0.016f);
 
 	shaders[0].SetInt("spotLight.on", flashlight);
 	shaders[0].SetVec3("spotLight.position", cameras[0].position);
@@ -49,11 +49,12 @@ void Example::Render(GLFWwindow* window, float deltaTime)
 	shaders[0].SetVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
 	shaders[0].SetVec3("spotLight.diffuse", 0.8f, 0.8f, 0.8f);
 	shaders[0].SetVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
-	shaders[0].SetFloat("spotLight.constant", 1.0f);
-	shaders[0].SetFloat("spotLight.linear", 0.09f);
-	shaders[0].SetFloat("spotLight.quadratic", 0.032f);
+	shaders[0].SetFloat("spotLight.constant", gammaCorrection ? 2.0f : 1.0f);
+	shaders[0].SetFloat("spotLight.linear", gammaCorrection ? 0.18f : 0.09f);
+	shaders[0].SetFloat("spotLight.quadratic", gammaCorrection ? 0.064f : 0.032f);
 
 	shaders[0].SetVec3("viewPosition", cameras[0].position);
+	shaders[0].SetInt("gammaCorrection", gammaCorrection);
 
 	for (int i = 0; i < objectsPositions.size(); i++)
 	{
@@ -66,7 +67,7 @@ void Example::Render(GLFWwindow* window, float deltaTime)
 		shaders[0].SetMat4("view", cameras[0].view);
 		shaders[0].SetMat4("projection", projection);
 
-		models[0].Draw(shaders[0]);
+		models[0].Draw(shaders[0], gammaCorrection);
 	}
 
 	shaders[1].Activate();
@@ -78,5 +79,5 @@ void Example::Render(GLFWwindow* window, float deltaTime)
 
 	shaders[1].SetMat4("mvp", mvp);
 
-	models[0].Draw(shaders[1]);
+	models[0].Draw(shaders[1], gammaCorrection);
 }

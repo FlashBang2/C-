@@ -17,11 +17,11 @@ Model::Model(std::string path)
 	traverseNodes(scene->mRootNode, scene);
 }
 
-void Model::Draw(Shader& shader)
+void Model::Draw(Shader& shader, bool gammaCorrected)
 {
 	for (int i = 0; i < meshes.size(); i++) 
 	{
-		meshes[i].Draw(shader);
+		meshes[i].Draw(shader, gammaCorrected);
 	}
 }
 
@@ -159,7 +159,7 @@ void Model::processMesh(aiMesh* mesh, const aiScene* scene)
 
 	ExtractBoneWeights(vertices, mesh, scene);
 
-	meshes.push_back(Mesh(vertices, indicies, textures));
+	meshes.push_back(Mesh(vertices, indicies, textures, gammaCorrectedTextures));
 }
 
 void Model::setupTextures(aiTextureType type, aiMaterial* material, const aiScene* scene)
@@ -167,7 +167,7 @@ void Model::setupTextures(aiTextureType type, aiMaterial* material, const aiScen
 	for (int i = 0; i < material->GetTextureCount(type); i++)
 	{
 		Texture texture;
-		GLuint id;
+		GLuint id, id2;
 
 		aiString path;
 		material->GetTexture(type, i, &path);
@@ -182,17 +182,17 @@ void Model::setupTextures(aiTextureType type, aiMaterial* material, const aiScen
 			imageData = stbi_load_from_memory((const stbi_uc*)embendedTexture->pcData, embendedTexture->mWidth, &width, &height, &numberOfChannels, 0);
 		}
 
-		GLenum internalFormat;
+		GLenum dataFormat;
 		switch (numberOfChannels)
 		{
 		case 1:
-			internalFormat = GL_RED;
+			dataFormat = GL_RED;
 			break;
 		case 3:
-			internalFormat = GL_RGB;
+			dataFormat = GL_RGB;
 			break;
 		case 4:
-			internalFormat = GL_RGBA;
+			dataFormat = GL_RGBA;
 			break;
 		}
 
@@ -200,7 +200,7 @@ void Model::setupTextures(aiTextureType type, aiMaterial* material, const aiScen
 		glBindTexture(GL_TEXTURE_2D, id);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, internalFormat, GL_UNSIGNED_BYTE, imageData);
+		glTexImage2D(GL_TEXTURE_2D, 0, dataFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, imageData);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -212,6 +212,34 @@ void Model::setupTextures(aiTextureType type, aiMaterial* material, const aiScen
 		texture.type = std::string(path.C_Str()).find_last_of('.');
 
 		textures.push_back(texture);
+
+		GLenum internalFormat;
+		switch (dataFormat) 
+		{
+			case GL_RGB:
+				internalFormat = GL_SRGB;
+				break;
+			case GL_RGBA:
+				internalFormat = GL_SRGB_ALPHA;
+				break;
+		}
+
+		glGenTextures(1, &id2);
+		glBindTexture(GL_TEXTURE_2D, id2);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, imageData);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		texture.ID = id2;
+		texture.type = std::string(path.C_Str()).find_last_of('.');
+
+		gammaCorrectedTextures.push_back(texture);
 
 		stbi_image_free(imageData);
 	}

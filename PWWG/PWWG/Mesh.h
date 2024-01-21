@@ -26,9 +26,9 @@ struct Texture {
 class Mesh
 {
 	public:
-		Mesh(std::vector<Vertex> Vertices, std::vector<GLuint> Indices, std::vector<Texture> Textures);
+		Mesh(std::vector<Vertex> Vertices, std::vector<GLuint> Indices, std::vector<Texture> Textures, std::vector<Texture> GammaCorrectedTextures);
 
-		void Draw(Shader& shader);
+		void Draw(Shader& shader, bool gammaCorrected);
 		float CalculateCursorOffsetY();
 		float GetMaxPositionX();
 		float GetMinPositionX();
@@ -37,6 +37,7 @@ class Mesh
 	private:
 		std::vector<Vertex> vertices;
 		std::vector<Texture> textures;
+		std::vector<Texture> gammaCorrectedTextures;
 		std::vector<GLuint> indices;
 		GLuint VAO;
 };

@@ -51,7 +51,7 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 
 	shaders[0].SetMat4("mvp", mvp);
 
-	models[0].Draw(shaders[0]);
+	models[0].Draw(shaders[0], false);
 
 	shaders[1].Activate();
 
@@ -59,23 +59,23 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 
 	shaders[1].SetMat4("mvp", mvp);
 
-	models[1].Draw(shaders[1]);
+	models[1].Draw(shaders[1], false);
 
 	mvp = projection * cameras[0].view * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f));
 
 	shaders[1].SetMat4("mvp", mvp);
 
-	models[2].Draw(shaders[1]);
+	models[2].Draw(shaders[1], false);
 
 	mvp = projection * cameras[0].view * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 30.0f, 0.0f));
 
 	shaders[1].SetMat4("mvp", mvp);
 
-	models[3].Draw(shaders[1]);
+	models[3].Draw(shaders[1], false);
 
 	mvp = projection * cameras[0].view * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 3.0f));
 
 	shaders[1].SetMat4("mvp", mvp);
 
-	models[4].Draw(shaders[1]);
+	models[4].Draw(shaders[1], false);
 }

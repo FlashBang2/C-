@@ -112,7 +112,7 @@ void Menu::Render(GLFWwindow* window, float deltaTime)
 
 	shaders[0].SetMat4("model", model);
 
-	models[0].Draw(shaders[0]);
+	models[0].Draw(shaders[0], false);
 
 	shaders[1].Activate();
 
