@@ -74,6 +74,8 @@
     <None Include="Shaders\Text.frag" />
     <None Include="Shaders\AnimatedMesh.vert" />
     <None Include="Shaders\AnimatedMesh.frag" />
+    <None Include="Shaders\PostProcessing.frag" />
+    <None Include="Shaders\PostProcessing.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">

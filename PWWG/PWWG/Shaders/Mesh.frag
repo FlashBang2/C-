@@ -44,7 +44,6 @@ in vec2 TextureCoordinates;
 
 out vec4 FragColor;
 
-uniform bool gammaCorrection;
 uniform vec3 viewPosition;
 uniform Material material;
 uniform PointLight pointLight;
@@ -59,10 +58,6 @@ void main()
 	if (spotLight.on) 
 	{
 		result += calculateSpotLight(spotLight, Normal, FragmentPosition, viewPosition);
-	}
-	if (gammaCorrection) 
-	{
-		result = pow(result, vec3(1.0f / 2.2f));
 	}
 	FragColor = vec4(result, 1.0f);
 }

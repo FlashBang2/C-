@@ -49,7 +49,7 @@ int main()
 		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
 
-		glClearColor(0.00f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		sceneManager.Render(window, deltaTime);
@@ -133,6 +133,18 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 					break;
 				case false:
 					sceneManager.scenes[sceneManager.ID]->flashlight = true;
+					break;
+			}
+		}
+		if (key == GLFW_KEY_H && action == GLFW_PRESS) 
+		{
+			switch (sceneManager.scenes[sceneManager.ID]->hdr) 
+			{
+				case true:
+					sceneManager.scenes[sceneManager.ID]->hdr = false;
+					break;
+				case false:
+					sceneManager.scenes[sceneManager.ID]->hdr = true;
 					break;
 			}
 		}

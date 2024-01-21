@@ -11,6 +11,9 @@ class Example:public GenericScene
 		void Render(GLFWwindow* window, float deltaTime);
 	private:
 		std::vector<glm::vec3> objectsPositions;
+		GLuint HDR, colorBuffer, VAO = 0;
+
+		void RenderQuadFullScreen();
 };
 
 #endif
