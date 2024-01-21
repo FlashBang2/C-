@@ -1,5 +1,8 @@
 #version 460 core
 
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BrightColor;
+
 struct Material 
 {
 	sampler2D diffuse;
@@ -42,8 +45,6 @@ in vec3 FragmentPosition;
 in vec3 Normal;
 in vec2 TextureCoordinates;
 
-out vec4 FragColor;
-
 uniform vec3 viewPosition;
 uniform Material material;
 uniform PointLight pointLight;
@@ -58,6 +59,12 @@ void main()
 	if (spotLight.on) 
 	{
 		result += calculateSpotLight(spotLight, Normal, FragmentPosition, viewPosition);
+	}
+	float brightness = dot(result, vec3(0.2126f, 0.7152f, 0.0722f));
+	BrightColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	if (brightness > 1.0f) 
+	{
+		BrightColor = vec4(result, 1.0f);
 	}
 	FragColor = vec4(result, 1.0f);
 }

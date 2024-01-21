@@ -112,6 +112,18 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 	if (sceneManager.ID == 1 || sceneManager.ID == 2)
 	{
+		if (key == GLFW_KEY_B && action == GLFW_PRESS) 
+		{
+			switch (sceneManager.scenes[sceneManager.ID]->bloom) 
+			{
+				case true:
+					sceneManager.scenes[sceneManager.ID]->bloom = false;
+					break;
+				case false:
+					sceneManager.scenes[sceneManager.ID]->bloom = true;
+					break;
+			}
+		}
 		if (key == GLFW_KEY_G && action == GLFW_PRESS) 
 		{
 			switch (sceneManager.scenes[sceneManager.ID]->gammaCorrection)

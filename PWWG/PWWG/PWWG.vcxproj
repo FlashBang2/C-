@@ -156,6 +156,8 @@
   <ItemGroup>
     <None Include="Shaders\AnimatedMesh.frag" />
     <None Include="Shaders\AnimatedMesh.vert" />
+    <None Include="Shaders\Blur.frag" />
+    <None Include="Shaders\Blur.vert" />
     <None Include="Shaders\Button.frag" />
     <None Include="Shaders\Button.vert" />
     <None Include="Shaders\Cursor.frag" />

@@ -58,8 +58,8 @@ void Model::ExtractBoneWeights(std::vector<Vertex>& vertices, aiMesh* mesh, cons
 		}
 		if (boneID == -1) 
 		{
-			std::cout << "Error::Bone: Extracton of data failed!";
-			std::abort();
+			std::cout << "ERROR::BONE: Extracton of data failed!";
+			abort();
 		}
 		aiVertexWeight* weights = mesh->mBones[i]->mWeights;
 		GLuint numberOfWeights = mesh->mBones[i]->mNumWeights;

@@ -23,14 +23,14 @@ Menu::Menu()
 	if (FT_Init_FreeType(&ft))
 	{
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-		std::abort();
+		abort();
 	}
 
 	FT_Face face;
 	if (FT_New_Face(ft, "fonts/arial.ttf", 0, &face))
 	{
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-		std::abort();
+		abort();
 	}
 	
 	FT_Set_Pixel_Sizes(face, 0, 48);
@@ -47,7 +47,7 @@ Menu::Menu()
 		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
 		{
 			std::cout << "ERROR:FREETYPE: Failed to load Glyph" << std::endl;
-			std::abort();
+			abort();
 		}
 
 		GLuint texture;

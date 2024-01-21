@@ -6,6 +6,7 @@ Example::Example()
 	Shader shader("Shaders/Mesh.vert", "Shaders/Mesh.frag");
 	Shader light("Shaders/Light.vert", "Shaders/Light.frag");
 	Shader postProcessing("Shaders/PostProcessing.vert", "Shaders/PostProcessing.frag");
+	Shader blur("Shaders/Blur.vert", "Shaders/Blur.frag");
 
 	Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
@@ -15,38 +16,86 @@ Example::Example()
 
 	projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 	
-	glGenTextures(1, &colorBuffer);
-	glBindTexture(GL_TEXTURE_2D, colorBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glGenFramebuffers(1, &HDR);
+	glBindFramebuffer(GL_FRAMEBUFFER, HDR);
+
+	glGenTextures(2, colorBuffers);
+
+	for (int i = 0; i < std::end(colorBuffers) - std::begin(colorBuffers); i++) 
+	{
+		glBindTexture(GL_TEXTURE_2D, colorBuffers[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, colorBuffers[i], 0);
+	}
 
 	GLuint renderDepthObject;
 	glGenRenderbuffers(1, &renderDepthObject);
 	glBindRenderbuffer(GL_RENDERBUFFER, renderDepthObject);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 
-	glGenFramebuffers(1, &HDR);
-	glBindFramebuffer(GL_FRAMEBUFFER, HDR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderDepthObject);
 
+	GLuint attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+
+	glDrawBuffers(2, attachments);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) 
+	{
+		std::cout << "ERROR::FRAMEBUFFER: Main framebuffer not completed!" << std::endl;
+		abort();
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glGenFramebuffers(2, pingpongFBO);
+	glGenTextures(2, pingpongColorBuffers);
+
+	for (int i = 0; i < std::end(pingpongFBO) - std::begin(pingpongFBO); i++) 
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
+		glBindTexture(GL_TEXTURE_2D, pingpongColorBuffers[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorBuffers[i], 0);
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) 
+		{
+			std::cout << "ERROR::FRAMEBUFFER: Pingpong framebuffer not completed!" << std::endl;;
+		}			
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	blur.Activate();
+
+	blur.SetInt("image", 0);
 
 	postProcessing.Activate();
 
 	postProcessing.SetInt("hdrBuffer", 0);
+	postProcessing.SetInt("bloomBlur", 1);
+
+	light.Activate();
+
+	light.SetVec3("lightColor", 100.0f, 100.0f, 100.0f);
 
 	shaders.push_back(shader);
 	shaders.push_back(light);
 	shaders.push_back(postProcessing);
+	shaders.push_back(blur);
 
 	cameras.push_back(camera);
 
 	models.push_back(box);
 
 	lightPositions.push_back(pointLightPosition);
-
 }
 
 void Example::Render(GLFWwindow* window, float deltaTime)
@@ -111,16 +160,34 @@ void Example::Render(GLFWwindow* window, float deltaTime)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	bool horizontal = true, firstIteration= true;
+	unsigned int amount = 10;
+
+	shaders[3].Activate();
+
+	glActiveTexture(GL_TEXTURE0);
+	for (GLuint i = 0; i < amount; i++) 
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+		shaders[3].SetInt("horizontal", horizontal);
+		glBindTexture(GL_TEXTURE_2D, firstIteration ? colorBuffers[1] : pingpongColorBuffers[!horizontal]);
+		RenderQuadFullScreen();
+		horizontal = !horizontal;
+		if (firstIteration) firstIteration = false;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	shaders[2].Activate();
-
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, colorBuffer);
-
-	shaders[2].SetInt("gammaCorrection", gammaCorrection);
+	glBindTexture(GL_TEXTURE_2D, colorBuffers[0]);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, pingpongColorBuffers[!horizontal]);
 	shaders[2].SetInt("hdr", hdr);
-
+	shaders[2].SetInt("gammaCorrection", gammaCorrection);
+	shaders[2].SetInt("bloom", bloom);
 	RenderQuadFullScreen();
 }
 
