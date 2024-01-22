@@ -34,6 +34,8 @@ AdvanceExample::AdvanceExample()
 
 	projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 
+	SetupPostProcessing();
+
 	blur.Activate();
 
 	blur.SetInt("image", 0);
@@ -68,6 +70,10 @@ AdvanceExample::AdvanceExample()
 
 void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, HDR);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		cameras[0].HandleEvents(window, deltaTime);
 		cameras[0].Update();
 
@@ -155,4 +161,36 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 		shaders[1].SetMat4("projection", projection);
 
 		models[4].Draw(shaders[1], false);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	bool horizontal = true, firstIteration = true;
+	unsigned int amount = 10;
+
+	shaders[4].Activate();
+
+	glActiveTexture(GL_TEXTURE0);
+	for (GLuint i = 0; i < amount; i++)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+		shaders[4].SetInt("horizontal", horizontal);
+		glBindTexture(GL_TEXTURE_2D, firstIteration ? colorBuffers[1] : pingpongColorBuffers[!horizontal]);
+		RenderQuadFullScreen();
+		horizontal = !horizontal;
+		if (firstIteration) firstIteration = false;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	shaders[3].Activate();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, colorBuffers[0]);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, pingpongColorBuffers[!horizontal]);
+	shaders[3].SetInt("hdr", hdr);
+	shaders[3].SetInt("gammaCorrection", gammaCorrection);
+	shaders[3].SetInt("bloom", bloom);
+	RenderQuadFullScreen();
 }
