@@ -44,7 +44,7 @@ class GenericScene
 		std::vector<PointLight> pointLights;
 		Flashlight flashlightObject;
 		bool flashlight, gammaCorrection, hdr, bloom;
-		int width = 800, height = 800;
+		int width = 1920, height = 1080;
 		double mouseX, mouseY;
 
 		GenericScene() {};

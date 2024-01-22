@@ -10,7 +10,7 @@ class SceneManager
 	public:
 		std::vector<GenericScene*> scenes;
 		GLuint ID;
-		int width = 800, height = 800;
+		int width = 1920, height = 1080;
 
 		SceneManager() {};
 		SceneManager(GLuint currentScene);

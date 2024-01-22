@@ -126,10 +126,10 @@ void Menu::Render(GLFWwindow* window, float deltaTime)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	RenderText(shaders[2], "Game Engine", glm::vec2(150.0f, 600.0f), 2.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	RenderText(shaders[2], "Example", glm::vec2(350.0f, 480.0f), 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
-	RenderText(shaders[2], "AdvanceExample", glm::vec2(350.0f, 380.0f), 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
-	RenderText(shaders[2], "Quit", glm::vec2(350.0f, 300.0f), 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+	RenderText(shaders[2], "Game Engine", glm::vec2(width / 3 + 50, height / 3 + 500.0f), 2.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	RenderText(shaders[2], "Example", glm::vec2(width / 3 + 250.0f, height / 3 + 275.0f), 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+	RenderText(shaders[2], "AdvanceExample", glm::vec2(width / 3 + 250.0f, height / 3 + 175.0f), 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+	RenderText(shaders[2], "Quit", glm::vec2(width / 3 + 250.0f, height / 3 + 75.0f), 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
@@ -144,13 +144,16 @@ void Menu::RenderText(Shader& shader, std::string value, glm::vec2 position, flo
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
 
+	float positionX = 0, positionY = 0;
+	float PositionX = position.x, PositionY = position.y;
+
 	std::string::const_iterator c;
 	for (c = value.begin(); c != value.end(); c++)
 	{
 		Character ch = characters[*c];
 
-		float positionX = position.x + ch.offsetFromTopLeft.x * scale;
-		float positionY = position.y - (ch.size.y - ch.offsetFromTopLeft.y) * scale;
+		positionX = position.x + ch.offsetFromTopLeft.x * scale;
+		positionY = position.y - (ch.size.y - ch.offsetFromTopLeft.y) * scale;
 
 		float width = ch.size.x * scale;
 		float height = ch.size.y * scale;
