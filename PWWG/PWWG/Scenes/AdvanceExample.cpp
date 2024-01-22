@@ -1,7 +1,56 @@
 #include "AdvanceExample.h"
 
 AdvanceExample::AdvanceExample()
-	:FlowersModel{{}, {}, {}, {}, {}, {}, {}, {}, {}, {}}
+	:flowersModel{{glm::mat4(1.0f), 0.0f, glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(5.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(-5.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(3.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(4.0f, 0.0f, 6.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(17.0f, 0.0f, 4.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(12.0f, 0.0f, 8.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(9.0f, 0.0f, 14.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-8.0f, 0.0f, -5.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(-10.0f, 0.0f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(-11.0f, 0.0f, -13.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(-5.0f, 0.0f, 13.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(0.0f, 0.0f, 18.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(2.0f, 0.0f, -19.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(6.0f, 0.0f, -21.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-9.0f, 0.0f, 15.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(18.0f, 0.0f, 14.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-10.0f, 0.0f, 11.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-17.0f, 0.0f, 13.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(-17.0f, 0.0f, 4.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(-13.0f, 0.0f, 20.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(14.0f, 0.0f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(16.0f, 0.0f, -11.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(12.0f, 0.0f, -19.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-18.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-10.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-2.7f, 0.0f, 4.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-10.0f, 0.0f, 6.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-6.0f, 0.0f, 7.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(12.0f, 0.0f, -10.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(14.0f, 0.0f, -13.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(7.0f, 0.0f, -5.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(12.0f, 0.0f, -4.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(19.0f, 0.0f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-5.0f, 0.0f, -13.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(7.0f, 0.0f, -18.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(15.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-8.0f, 0.0f, -2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-18.0f, 0.0f, -4.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(1.5f, 0.0f, 7.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(-8.0f, 0.0f, -21.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(5.0f, 0.0f, -9.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f),  0.0f, glm::vec3(5.5f, 0.0f, -13.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(0.0f, 0.0f, -13.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-3.3f, 0.0f, -22.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(6.0f, 0.0f, 18.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(23.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-22.0f, 0.0f, 1.2f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(-2.4f, 0.0f, -19.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}}
 {
 	Shader animatedMesh("Shaders/AnimatedMesh.vert", "Shaders/AnimatedMesh.frag");
 	Shader mesh("Shaders/Mesh.vert", "Shaders/Mesh.frag");
@@ -23,10 +72,10 @@ AdvanceExample::AdvanceExample()
 
 	PointLight pointLight
 	{
-		glm::vec3 (0.0f, 5.0f, 0.0f),
+		glm::vec3 (-6.0f, 10.0f, 0.0f),
 		glm::vec3 (0.0f, 0.0f, 0.0f),
 		glm::vec3 (2.0f, 2.0f, 2.0f),
-		glm::vec3 (1.0f, 1.0f, 1.0f),
+		glm::vec3 (10.0f, 10.0f, 10.0f),
 		1.0f,
 		0.09f,
 		0.032f
@@ -66,6 +115,24 @@ AdvanceExample::AdvanceExample()
 	models.push_back(flower);
 
 	pointLights.push_back(pointLight);
+
+	std::mt19937 generator(std::random_device{}());
+
+	std::uniform_int_distribution<std::size_t> distribution(0, std::end(flowersModel) - std::begin(flowersModel) - 1);
+
+	for (std::size_t i = 0; i < std::end(selectedFlowersModel) - std::begin(selectedFlowersModel); i++)
+	{
+		std::size_t value = distribution(generator);
+		if (std::find(std::begin(selectedFlowersModel), std::end(selectedFlowersModel), value) != std::end(selectedFlowersModel)) 
+		{
+			--i;
+			continue;
+		}
+		selectedFlowersModel[i] = value;
+		flowersModel[value].model = glm::translate(flowersModel[value].model, flowersModel[value].position);
+		flowersModel[value].model = glm::rotate(flowersModel[value].model, flowersModel[value].strengthOfRotation, flowersModel[value].rotation);
+		flowersModel[value].model = glm::scale(flowersModel[value].model, flowersModel[value].scale);
+	}
 }
 
 void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
@@ -86,7 +153,10 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 			shaders[0].SetMat4("finalBonesMatrices[" + std::to_string(i) + "]", animators[0].finalBoneMatrices[i]);
 		}
 
-		glm::mat4 mvp = projection * cameras[0].view * glm::mat4(1.0f);
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(-2.9f, 4.62f, -9.7f));
+		model = glm::scale(model, glm::vec3(0.09f, 0.09f, 0.09f));
+
+		glm::mat4 mvp = projection * cameras[0].view * model;
 
 		shaders[0].SetMat4("mvp", mvp);
 
@@ -96,7 +166,7 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 
 		shaders[1].SetFloat("material.shininess", 64.0f);
 
-		shaders[1].SetVec3("directionalLight.direction", 0.0f, 5.0f, -15.0f);
+		shaders[1].SetVec3("directionalLight.direction", -0.2f, -1.0f, -0.3f);
 		shaders[1].SetVec3("directionalLight.ambient", 0.1f, 0.1f, 0.1f);
 		shaders[1].SetVec3("directionalLight.diffuse", 0.3f, 0.3f, 0.3f);
 		shaders[1].SetVec3("directionalLight.specular", 1.0f, 1.0f, 1.0f);
@@ -123,7 +193,7 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 	
 		shaders[1].SetVec3("viewPosition", cameras[0].position);
 
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
+		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 
 		shaders[1].SetMat4("model", model);
 		shaders[1].SetMat4("view", cameras[0].view);
@@ -133,34 +203,44 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 
 		shaders[1].SetFloat("material.shininess", 12.0f);
 
-		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f));
+		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.001f, 0.0f));
+		model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
 
 		shaders[1].SetMat4("model", model);
-		shaders[1].SetMat4("view", cameras[0].view);
-		shaders[1].SetMat4("projection", projection);
 
 		models[2].Draw(shaders[1], false);
 
 		shaders[1].SetFloat("material.shininess", 8.0f);
 
-		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 10.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		model = glm::translate(glm::mat4(1.0f), glm::vec3(-2.9f, 4.8f, -10.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 
 		shaders[1].SetMat4("model", model);
-		shaders[1].SetMat4("view", cameras[0].view);
-		shaders[1].SetMat4("projection", projection);
 
 		models[3].Draw(shaders[1], false);
 
 		shaders[1].SetFloat("material.shininess", 60.0f);
 
-		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 3.0f));
-	
-		shaders[1].SetMat4("model", model);
-		shaders[1].SetMat4("view", cameras[0].view);
-		shaders[1].SetMat4("projection", projection);
+		for (int i = 0; i < std::end(selectedFlowersModel) - std::begin(selectedFlowersModel); i++)
+		{
+			model = flowersModel[selectedFlowersModel[i]].model;
 
-		models[4].Draw(shaders[1], false);
+			shaders[1].SetMat4("model", model);
+
+			models[4].Draw(shaders[1], false);
+		}
+
+		shaders[2].Activate();
+
+		model = glm::mat4(1.0f);
+
+		model = glm::translate(model, pointLights[0].position);
+
+		mvp = projection * cameras[0].view * model;
+
+		shaders[2].SetMat4("mvp", mvp);
+
+		models[4].Draw(shaders[2], gammaCorrection);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

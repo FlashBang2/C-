@@ -1,6 +1,8 @@
 #ifndef ADVANCE_EXAMPLE_H
 #define ADVANCE_EXAMPLE_H
 
+#include<random>
+
 #include"GenericScene.h"
 
 class AdvanceExample:public GenericScene
@@ -10,7 +12,8 @@ class AdvanceExample:public GenericScene
 
 		void Render(GLFWwindow* window, float deltaTime);
 	private:
-		Object FlowersModel[10];
+		Object flowersModel[50];
+		int selectedFlowersModel[10];
 };
 
 #endif
