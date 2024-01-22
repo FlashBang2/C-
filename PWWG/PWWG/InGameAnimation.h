@@ -1,6 +1,7 @@
 #ifndef IN_GAME_ANIMATION_H
 #define IN_GAME_ANIMATION_H
 
+#include<iostream>
 #include<vector>
 #include<glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -27,6 +28,9 @@ struct KeyScaleInGame
 class InGameAnimation
 {
 	public:
+		bool endAnimation = false;
+		float currentTime;
+
 		InGameAnimation() {};
 		InGameAnimation(float Duration, unsigned int TicksPerSecond, std::vector<KeyPositionInGame> Positions, std::vector<KeyRotationInGame> Rotations, std::vector<KeyScaleInGame> Scales);
 
@@ -37,7 +41,7 @@ class InGameAnimation
 		std::vector<KeyRotationInGame> rotations;
 		std::vector<KeyScaleInGame> scales;
 		unsigned int ticksPerSecond;
-		float duration, currentTime;
+		float duration, animationTimePlaying = 0;
 
 		float getScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
 		unsigned int getPositionIndex(float animationTime);

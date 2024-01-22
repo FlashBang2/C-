@@ -51,7 +51,10 @@ AdvanceExample::AdvanceExample()
 				  {glm::mat4(1.0f), 0.0f, glm::vec3(23.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
 				  {glm::mat4(1.0f), 0.0f, glm::vec3(-22.0f, 0.0f, 1.2f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
 				  {glm::mat4(1.0f), 0.0f, glm::vec3(-2.4f, 0.0f, -19.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}},
-	beesModel{ {glm::mat4(1.0f), 0.0f, glm::vec3(-2.9f, 4.62f, -9.7f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.09f, 0.09f, 0.09f)}}
+	beesModel{ {glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(-2.9f, 4.0f, -9.7f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.09f, 0.09f, 0.09f)}},
+	pathToFlowersAnimationDistribution(0, std::end(selectedFlowersModel) - std::begin(selectedFlowersModel) - 1),
+	generator(std::random_device{}()),
+	hives{{glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(-2.5f, 4.15f, -10.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}}
 {
 	Shader animatedMesh("Shaders/AnimatedMesh.vert", "Shaders/AnimatedMesh.frag");
 	Shader mesh("Shaders/Mesh.vert", "Shaders/Mesh.frag");
@@ -64,7 +67,7 @@ AdvanceExample::AdvanceExample()
 	Model bee("Models/Bee/bee.fbx");
 	Model tree("Models/Tree/tree.fbx");
 	Model ground("Models/Ground/ground.fbx");
-	Model hive("Models/Hive/hive.obj");
+	Model hive("Models/Hive/hive.fbx");
 	Model flower("Models/Flower/flower.fbx");
 	Model sunAndMoon("Models/SunAndMoon/sunAndMoon.fbx");
 
@@ -119,49 +122,37 @@ AdvanceExample::AdvanceExample()
 
 	pointLights.push_back(pointLight);
 
-	std::mt19937 generator(std::random_device{}());
-
 	std::uniform_int_distribution<std::size_t> distribution(0, std::end(flowersModel) - std::begin(flowersModel) - 1);
 
 	for (std::size_t i = 0; i < std::end(flowersModel) - std::begin(flowersModel); i++)
 	{
-		/*std::size_t value = distribution(generator);
+		std::size_t value = distribution(generator);
 		if (std::find(std::begin(selectedFlowersModel), std::end(selectedFlowersModel), value) != std::end(selectedFlowersModel)) 
 		{
 			--i;
 			continue;
 		}
-		selectedFlowersModel[i] = value;*/
-		flowersModel[i].model = glm::translate(flowersModel[i].model, flowersModel[i].position);
-		flowersModel[i].model = glm::rotate(flowersModel[i].model, flowersModel[i].strengthOfRotation, flowersModel[i].rotation);
-		flowersModel[i].model = glm::scale(flowersModel[i].model, flowersModel[i].scale);
+		selectedFlowersModel[i] = value;
+		flowersModel[value].model = glm::translate(flowersModel[value].model, flowersModel[value].position);
+		flowersModel[value].model = glm::rotate(flowersModel[value].model, flowersModel[value].strengthOfRotation, flowersModel[value].rotation);
+		flowersModel[value].model = glm::scale(flowersModel[value].model, flowersModel[value].scale);
 	}
+
+	animationIndex = pathToFlowersAnimationDistribution(generator);
 
 	std::vector<KeyPositionInGame> positions;
 	std::vector<KeyRotationInGame> rotations;
 	std::vector<KeyScaleInGame> scales;
 
-	positions.push_back({ beesModel[0].position, 0.0f});
-	positions.push_back({ glm::vec3(-5.0f, 4.05f, 0.0f), 20.0f});
-	positions.push_back({ glm::vec3(-5.0f, 4.05f, 0.0f), 40.0f});
-	positions.push_back({ beesModel[0].position, 60.0f});
-	positions.push_back({ beesModel[0].position, 80.0f });
-	rotations.push_back({ glm::angleAxis(glm::radians(beesModel[0].strengthOfRotation), glm::vec3(0.0f, 1.0f, 0.0f)), 0.0f});
-	rotations.push_back({ glm::angleAxis(glm::radians(beesModel[0].strengthOfRotation), glm::vec3(0.0f, 1.0f, 0.0f)), 20.0f});
-	rotations.push_back({ glm::angleAxis(glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)), 40.0f});
-	rotations.push_back({ glm::angleAxis(glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)), 60.0f});
-	rotations.push_back({ glm::angleAxis(glm::radians(beesModel[0].strengthOfRotation), glm::vec3(0.0f, 1.0f, 0.0f)), 80.0f });
-	scales.push_back({ beesModel[0].scale, 0.0f });
-
-	pathToFlowers[0] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-
-	positions = {};
-	rotations = {};
-	scales = {};
+	for (int i = 0; i < std::end(pathToFlowers) - std::begin(pathToFlowers); i++)
+	{
+		positions = {};
+		rotations = {};
+		scales = {};
 
 	positions.push_back({ glm::vec3(beesModel[0].position), 0.0f});
-	positions.push_back({ glm::vec3(0.0f, 4.05f, 5.0f), 20.0f});
-	positions.push_back({ glm::vec3(0.0f, 4.05f, 5.0f), 40.0f });
+	positions.push_back({ glm::vec3(flowersModel[i].position.x, 4.05f, flowersModel[i].position.z), 20.0f});
+	positions.push_back({ glm::vec3(flowersModel[i].position.x, 4.05f, flowersModel[i].position.z), 40.0f });
 	positions.push_back({ glm::vec3(beesModel[0].position), 60.0f });
 	positions.push_back({ glm::vec3(beesModel[0].position), 80.0f });
 	rotations.push_back({glm::angleAxis(glm::radians(beesModel[0].strengthOfRotation), glm::vec3(0.0f, 1.0f, 0.0f)), 0.0f});
@@ -171,60 +162,8 @@ AdvanceExample::AdvanceExample()
 	rotations.push_back({ glm::angleAxis(glm::radians(beesModel[0].strengthOfRotation), glm::vec3(0.0f, 1.0f, 0.0f)), 80.0f });
 	scales.push_back({ beesModel[0].scale, 0.0f });
 
-	pathToFlowers[1] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-
-	positions = {};
-	rotations = {};
-	scales = {};
-
-	pathToFlowers[2] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[3] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[4] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[5] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[6] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[7] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[8] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[9] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[10] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[11] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[12] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[13] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[14] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[15] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[16] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[17] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[18] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[19] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[20] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[21] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[22] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[23] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[24] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[25] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[26] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[27] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[28] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[29] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[30] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[31] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[32] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[33] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[34] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[35] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[36] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[37] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[38] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[39] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[40] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[41] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[42] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[43] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[44] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[45] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[46] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[47] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[48] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
-	pathToFlowers[49] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
+	pathToFlowers[i] = new InGameAnimation(80.0f, 5, positions, rotations, scales);
+	}
 
 	positions = { {glm::vec3(0.0f, 5.0f, 0.0f), 0.0f}};
 	rotations = { {glm::angleAxis(glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f)), 0.0f},
@@ -239,6 +178,14 @@ AdvanceExample::AdvanceExample()
 		beesModel[i].model = glm::translate(beesModel[i].model, beesModel[i].position);
 		beesModel[i].model = glm::rotate(beesModel[i].model, beesModel[i].strengthOfRotation, beesModel[i].rotation);
 		beesModel[i].model = glm::scale(beesModel[i].model, beesModel[i].scale);
+	}
+
+	for (int i = 0; i < std::end(hives) - std::begin(hives); i++) 
+	{
+		hives[i].model = glm::translate(hives[i].model, hives[i].position);
+		hives[i].model = glm::rotate(hives[i].model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		hives[i].model = glm::rotate(hives[i].model, hives[i].strengthOfRotation, hives[i].rotation);
+		hives[i].model = glm::scale(hives[i].model, hives[i].scale);
 	}
 }
 
@@ -260,7 +207,14 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 			shaders[0].SetMat4("finalBonesMatrices[" + std::to_string(i) + "]", animators[0].finalBoneMatrices[i]);
 		}
 
-		glm::mat4 model = pathToFlowers[1]->UpdateAnimation(deltaTime);
+		if (pathToFlowers[selectedFlowersModel[animationIndex]]->endAnimation)
+		{
+			pathToFlowers[animationIndex]->endAnimation = false;
+			pathToFlowers[animationIndex]->currentTime = 0.0f;
+			animationIndex = pathToFlowersAnimationDistribution(generator);
+		}
+
+		glm::mat4 model = pathToFlowers[selectedFlowersModel[animationIndex]]->UpdateAnimation(deltaTime);
 
 		glm::mat4 mvp = projection * cameras[0].view * model;
 
@@ -318,18 +272,15 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 
 		shaders[1].SetFloat("material.shininess", 8.0f);
 
-		model = glm::translate(glm::mat4(1.0f), glm::vec3(-2.9f, 4.8f, -10.0f));
-		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
-
-		shaders[1].SetMat4("model", model);
+		shaders[1].SetMat4("model", hives[0].model);
 
 		models[3].Draw(shaders[1], gammaCorrection);
 
 		shaders[1].SetFloat("material.shininess", 60.0f);
 
-		for (int i = 0; i < std::end(flowersModel) - std::begin(flowersModel); i++)
+		for (int i = 0; i < std::end(selectedFlowersModel) - std::begin(selectedFlowersModel); i++)
 		{
-			model = flowersModel[i].model;
+			model = flowersModel[selectedFlowersModel[i]].model;
 
 			shaders[1].SetMat4("model", model);
 
@@ -383,4 +334,12 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 	shaders[3].SetInt("gammaCorrection", gammaCorrection);
 	shaders[3].SetInt("bloom", bloom);
 	RenderQuadFullScreen();
+}
+
+glm::vec3 AdvanceExample::InterpolateColor(float deltaTime, unsigned int ticksPerSecond, float duration)
+{
+	currentColorAnimationTime += ticksPerSecond * deltaTime;
+	currentColorAnimationTime = fmod(currentColorAnimationTime, duration);
+
+	return glm::vec3();
 }

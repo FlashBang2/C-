@@ -13,10 +13,14 @@ class AdvanceExample:public GenericScene
 
 		void Render(GLFWwindow* window, float deltaTime);
 	private:
-		Object flowersModel[50], beesModel[1];
-		int selectedFlowersModel[10];
+		std::mt19937 generator; 
+		std::uniform_int_distribution<std::size_t> pathToFlowersAnimationDistribution;
+		Object flowersModel[50], beesModel[1], hives[1];
+		int selectedFlowersModel[10], animationIndex, currentColorAnimationTime;
 		InGameAnimation* pathToFlowers[50];
 		InGameAnimation* SunAndMoon;
+
+		glm::vec3 InterpolateColor(float deltaTime, unsigned int ticksPerSecond, float duration);
 };
 
 #endif

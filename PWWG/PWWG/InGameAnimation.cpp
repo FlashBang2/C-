@@ -6,6 +6,8 @@ InGameAnimation::InGameAnimation(float Duration, unsigned int TicksPerSecond, st
 glm::mat4 InGameAnimation::UpdateAnimation(float deltaTime)
 {
 	currentTime += ticksPerSecond * deltaTime;
+	animationTimePlaying += ticksPerSecond * deltaTime;
+	if (animationTimePlaying > duration) endAnimation = true;
 	currentTime = fmod(currentTime, duration);
 	glm::mat4 translate = InterpolatePosition(currentTime);
 	glm::mat4 rotation = InterpolateRotation(currentTime);
