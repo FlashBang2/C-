@@ -1,7 +1,10 @@
 #include "Example.h"
 
 Example::Example()
-	:objectsPositions{glm::vec3(0.0f, 0.0f, 0.0f),glm::vec3(0.0f, 2.0f, 0.0f)}
+	: boxesModel{ {glm::mat4(1.0f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(3.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f)},
+				  {glm::mat4(1.0f), 30.0f, glm::vec3(-3.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.8f, 0.8f, 0.8f)},
+				  {glm::mat4(1.0f), 0.0f, glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f)}}
 {
 	Shader shader("Shaders/Mesh.vert", "Shaders/Mesh.frag");
 	Shader light("Shaders/Light.vert", "Shaders/Light.frag");
@@ -12,7 +15,14 @@ Example::Example()
 
 	Model box("Models/Box/box.obj");
 
-	glm::vec3 pointLightPosition = glm::vec3(0.0f, 3.0f, -3.0f);
+	PointLight pointLight;
+
+	pointLight.position = glm::vec3(0.0f, 5.0f, -3.0f);
+	pointLight.ambient = glm::vec3(0.1f, 0.1f, 0.1f);
+	pointLight.diffuse = glm::vec3(10.0f, 10.0f, 10.0f);
+	pointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+	pointLight.linear = 0.09f;
+	pointLight.quadratic = 0.032f;
 
 	projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 	
@@ -84,7 +94,7 @@ Example::Example()
 
 	light.Activate();
 
-	light.SetVec3("lightColor", 100.0f, 100.0f, 100.0f);
+	light.SetVec3("lightColor", pointLight.diffuse);
 
 	shaders.push_back(shader);
 	shaders.push_back(light);
@@ -95,7 +105,14 @@ Example::Example()
 
 	models.push_back(box);
 
-	lightPositions.push_back(pointLightPosition);
+	pointLights.push_back(pointLight);
+
+	for (int i = 0; i < std::end(boxesModel) - std::begin(boxesModel); i++) 
+	{	
+		boxesModel[i].model = glm::translate(boxesModel[i].model, boxesModel[i].position);
+		boxesModel[i].model = glm::rotate(boxesModel[i].model, glm::radians(boxesModel[i].strengthOfRotation), boxesModel[i].rotation);
+		boxesModel[i].model = glm::scale(boxesModel[i].model, boxesModel[i].scale);
+	}
 }
 
 void Example::Render(GLFWwindow* window, float deltaTime)
@@ -111,36 +128,38 @@ void Example::Render(GLFWwindow* window, float deltaTime)
 
 		shaders[0].SetFloat("material.shininess", 64.0f);
 
-		shaders[0].SetVec3("pointLight.position", lightPositions[0]);
-		shaders[0].SetVec3("pointLight.ambient", 0.2f, 0.2f, 0.2f);
-		shaders[0].SetVec3("pointLight.diffuse", 100.0f, 100.0f, 100.0f);
-		shaders[0].SetVec3("pointLight.specular", 1.0f, 1.0f, 1.0f);
-		shaders[0].SetFloat("pointLight.constant", gammaCorrection ? 2.0f : 1.0f);
-		shaders[0].SetFloat("pointLight.linear", gammaCorrection ? 0.08f : 0.04f);
-		shaders[0].SetFloat("pointLight.quadratic", gammaCorrection ? 0.032f : 0.016f);
+		shaders[0].SetVec3("directionalLight.direction", 0.0f, 0.0f, 0.0f);
+		shaders[0].SetVec3("directionalLight.ambient", 0.0f, 0.0f, 0.0f);
+		shaders[0].SetVec3("directionalLight.diffuse", 0.0f, 0.0f, 0.0f);
+		shaders[0].SetVec3("directionalLight.specular", 0.0f, 0.0f, 0.0f);
+
+		shaders[0].SetVec3("pointLight[0].position", pointLights[0].position);
+		shaders[0].SetVec3("pointLight[0].ambient", pointLights[0].ambient);
+		shaders[0].SetVec3("pointLight[0].diffuse", pointLights[0].diffuse);
+		shaders[0].SetVec3("pointLight[0].specular", pointLights[0].specular);
+		shaders[0].SetFloat("pointLight[0].constant", gammaCorrection ? 2 * pointLights[0].constant : pointLights[0].constant);
+		shaders[0].SetFloat("pointLight[0].linear", gammaCorrection ? 2 * pointLights[0].linear : pointLights[0].linear);
+		shaders[0].SetFloat("pointLight[0].quadratic", gammaCorrection ? 2 * pointLights[0].quadratic : pointLights[0].quadratic);
 
 		shaders[0].SetInt("spotLight.on", flashlight);
 		shaders[0].SetVec3("spotLight.position", cameras[0].position);
 		shaders[0].SetVec3("spotLight.direction", cameras[0].front);
 		shaders[0].SetFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
 		shaders[0].SetFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
-		shaders[0].SetVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-		shaders[0].SetVec3("spotLight.diffuse", 0.8f, 0.8f, 0.8f);
-		shaders[0].SetVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
-		shaders[0].SetFloat("spotLight.constant", gammaCorrection ? 2.0f : 1.0f);
-		shaders[0].SetFloat("spotLight.linear", gammaCorrection ? 0.18f : 0.09f);
-		shaders[0].SetFloat("spotLight.quadratic", gammaCorrection ? 0.064f : 0.032f);
+		shaders[0].SetVec3("spotLight.ambient", flashlightObject.ambient);
+		shaders[0].SetVec3("spotLight.diffuse", flashlightObject.diffuse);
+		shaders[0].SetVec3("spotLight.specular", flashlightObject.specular);
+		shaders[0].SetFloat("spotLight.constant", gammaCorrection ? 2 * flashlightObject.constant : flashlightObject.constant);
+		shaders[0].SetFloat("spotLight.linear", gammaCorrection ? 2 * flashlightObject.linear : flashlightObject.linear);
+		shaders[0].SetFloat("spotLight.quadratic", gammaCorrection ? 2 * flashlightObject.quadratic : flashlightObject.quadratic);
 
 		shaders[0].SetVec3("viewPosition", cameras[0].position);
 
-		for (int i = 0; i < objectsPositions.size(); i++)
+		for (int i = 0; i < std::end(boxesModel) - std::begin(boxesModel); i++)
 		{
-			glm::mat4 model = glm::mat4(1.0f);
+			boxesModel[i].model = glm::rotate(boxesModel[i].model, glm::radians(0.05f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-			model = glm::translate(model, objectsPositions[i]);
-			model = glm::rotate(model, glm::radians(0.5f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-			shaders[0].SetMat4("model", model);
+			shaders[0].SetMat4("model", boxesModel[i].model);
 			shaders[0].SetMat4("view", cameras[0].view);
 			shaders[0].SetMat4("projection", projection);
 
@@ -150,7 +169,7 @@ void Example::Render(GLFWwindow* window, float deltaTime)
 		shaders[1].Activate();
 		glm::mat4 model = glm::mat4(1.0f);
 
-		model = glm::translate(model, lightPositions[0]);
+		model = glm::translate(model, pointLights[0].position);
 
 		glm::mat4 mvp = projection * cameras[0].view * model;
 

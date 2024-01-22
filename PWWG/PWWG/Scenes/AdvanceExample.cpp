@@ -1,9 +1,11 @@
 #include "AdvanceExample.h"
 
 AdvanceExample::AdvanceExample()
+	:FlowersModel{{}, {}, {}, {}, {}, {}, {}, {}, {}, {}}
 {
-	Shader AnimatedMesh("Shaders/AnimatedMesh.vert", "Shaders/AnimatedMesh.frag");
-	Shader Light("Shaders/Light.vert", "Shaders/Light.frag");
+	Shader animatedMesh("Shaders/AnimatedMesh.vert", "Shaders/AnimatedMesh.frag");
+	Shader mesh("Shaders/Mesh.vert", "Shaders/Mesh.frag");
+	Shader light("Shaders/Light.vert", "Shaders/Light.frag");
 
 	Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
@@ -17,12 +19,23 @@ AdvanceExample::AdvanceExample()
 
 	Animator animator(animation);
 
+	PointLight pointLight
+	{
+		glm::vec3 (0.0f, 5.0f, 0.0f),
+		glm::vec3 (0.0f, 0.0f, 0.0f),
+		glm::vec3 (2.0f, 2.0f, 2.0f),
+		glm::vec3 (1.0f, 1.0f, 1.0f),
+		1.0f,
+		0.09f,
+		0.032f
+	};
+
 	projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 
 	animators.push_back(animator);
 
-	shaders.push_back(AnimatedMesh);
-	shaders.push_back(Light);
+	shaders.push_back(animatedMesh);
+	shaders.push_back(mesh);
 
 	cameras.push_back(camera);
 
@@ -31,6 +44,8 @@ AdvanceExample::AdvanceExample()
 	models.push_back(ground);
 	models.push_back(hive);
 	models.push_back(flower);
+
+	pointLights.push_back(pointLight);
 }
 
 void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
@@ -55,27 +70,71 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 
 	shaders[1].Activate();
 
-	mvp = projection * cameras[0].view * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
+	shaders[1].SetFloat("material.shininess", 64.0f);
 
-	shaders[1].SetMat4("mvp", mvp);
+	shaders[1].SetVec3("directionalLight.direction", 0.0f, 5.0f, -15.0f);
+	shaders[1].SetVec3("directionalLight.ambient", 0.1f, 0.1f, 0.1f);
+	shaders[1].SetVec3("directionalLight.diffuse", 0.3f, 0.3f, 0.3f);
+	shaders[1].SetVec3("directionalLight.specular", 1.0f, 1.0f, 1.0f);
+
+	shaders[1].SetVec3("pointLight[0].position", pointLights[0].position);
+	shaders[1].SetVec3("pointLight[0].ambient", pointLights[0].ambient);
+	shaders[1].SetVec3("pointLight[0].diffuse", pointLights[0].diffuse);
+	shaders[1].SetVec3("pointLight[0].specular", pointLights[0].specular);
+	shaders[1].SetFloat("pointLight[0].constant", gammaCorrection ? 2 * pointLights[0].constant : pointLights[0].constant);
+	shaders[1].SetFloat("pointLight[0].linear", gammaCorrection ? 2 * pointLights[0].linear : pointLights[0].linear);
+	shaders[1].SetFloat("pointLight[0].quadratic", gammaCorrection ? 2 * pointLights[0].quadratic : pointLights[0].quadratic);
+
+	shaders[1].SetInt("spotLight.on", flashlight);
+	shaders[1].SetVec3("spotLight.position", cameras[0].position);
+	shaders[1].SetVec3("spotLight.direction", cameras[0].front);
+	shaders[1].SetFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+	shaders[1].SetFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+	shaders[1].SetVec3("spotLight.ambient", flashlightObject.ambient);
+	shaders[1].SetVec3("spotLight.diffuse", flashlightObject.diffuse);
+	shaders[1].SetVec3("spotLight.specular", flashlightObject.specular);
+	shaders[1].SetFloat("spotLight.constant", gammaCorrection ? 2 * flashlightObject.constant : flashlightObject.constant);
+	shaders[1].SetFloat("spotLight.linear", gammaCorrection ? 2 * flashlightObject.linear : flashlightObject.linear);
+	shaders[1].SetFloat("spotLight.quadratic", gammaCorrection ? 2 * flashlightObject.quadratic : flashlightObject.quadratic);
+
+	shaders[1].SetVec3("viewPosition", cameras[0].position);
+
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
+
+	shaders[1].SetMat4("model", model);
+	shaders[1].SetMat4("view", cameras[0].view);
+	shaders[1].SetMat4("projection", projection);
 
 	models[1].Draw(shaders[1], false);
 
-	mvp = projection * cameras[0].view * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f));
+	shaders[1].SetFloat("material.shininess", 12.0f);
 
-	shaders[1].SetMat4("mvp", mvp);
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f));
+
+	shaders[1].SetMat4("model", model);
+	shaders[1].SetMat4("view", cameras[0].view);
+	shaders[1].SetMat4("projection", projection);
 
 	models[2].Draw(shaders[1], false);
 
-	mvp = projection * cameras[0].view * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 30.0f, 0.0f));
+	shaders[1].SetFloat("material.shininess", 8.0f);
 
-	shaders[1].SetMat4("mvp", mvp);
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 10.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+
+	shaders[1].SetMat4("model", model);
+	shaders[1].SetMat4("view", cameras[0].view);
+	shaders[1].SetMat4("projection", projection);
 
 	models[3].Draw(shaders[1], false);
 
-	mvp = projection * cameras[0].view * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 3.0f));
+	shaders[1].SetFloat("material.shininess", 60.0f);
 
-	shaders[1].SetMat4("mvp", mvp);
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 3.0f));
+
+	shaders[1].SetMat4("model", model);
+	shaders[1].SetMat4("view", cameras[0].view);
+	shaders[1].SetMat4("projection", projection);
 
 	models[4].Draw(shaders[1], false);
 }

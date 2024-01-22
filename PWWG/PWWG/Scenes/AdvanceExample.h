@@ -10,6 +10,7 @@ class AdvanceExample:public GenericScene
 
 		void Render(GLFWwindow* window, float deltaTime);
 	private:
+		Object FlowersModel[10];
 };
 
 #endif

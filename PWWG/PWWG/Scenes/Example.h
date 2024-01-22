@@ -10,7 +10,7 @@ class Example:public GenericScene
 
 		void Render(GLFWwindow* window, float deltaTime);
 	private:
-		std::vector<glm::vec3> objectsPositions;
+		Object boxesModel[4];
 		GLuint pingpongFBO[2], pingpongColorBuffers[2];
 		GLuint HDR, colorBuffers[2], VAO = 0;
 
