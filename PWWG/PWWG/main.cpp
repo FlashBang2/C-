@@ -179,11 +179,15 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 		if (buttons[i].state == HOVER && i == 0 && button == GLFW_MOUSE_BUTTON_LEFT)
 		{
 			sceneManager.ID = 1;
+			lastPositionX = sceneManager.scenes[sceneManager.ID]->mouseX;
+			lastPositionY = sceneManager.scenes[sceneManager.ID]->mouseY;
 			glfwSetCursorPos(window, sceneManager.scenes[sceneManager.ID]->mouseX, sceneManager.scenes[sceneManager.ID]->mouseY);
 		}
 		if (buttons[i].state == HOVER && i == 1 && button == GLFW_MOUSE_BUTTON_LEFT)
 		{
 			sceneManager.ID = 2;
+			lastPositionX = sceneManager.scenes[sceneManager.ID]->mouseX;
+			lastPositionY = sceneManager.scenes[sceneManager.ID]->mouseY;
 			glfwSetCursorPos(window, sceneManager.scenes[sceneManager.ID]->mouseX, sceneManager.scenes[sceneManager.ID]->mouseY);
 		}
 		if (buttons[i].state == HOVER && i == 2 && button == GLFW_MOUSE_BUTTON_LEFT)
