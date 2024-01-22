@@ -54,7 +54,8 @@ AdvanceExample::AdvanceExample()
 	beesModel{ {glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(-2.9f, 4.0f, -9.7f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.09f, 0.09f, 0.09f)}},
 	pathToFlowersAnimationDistribution(0, std::end(selectedFlowersModel) - std::begin(selectedFlowersModel) - 1),
 	generator(std::random_device{}()),
-	hives{{glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(-2.5f, 4.15f, -10.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}}
+	hives{{glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(-2.5f, 4.15f, -10.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}},
+	diffuse(2.0f, 2.0f, 2.0f)
 {
 	Shader animatedMesh("Shaders/AnimatedMesh.vert", "Shaders/AnimatedMesh.frag");
 	Shader mesh("Shaders/Mesh.vert", "Shaders/Mesh.frag");
@@ -191,6 +192,7 @@ AdvanceExample::AdvanceExample()
 
 void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 {
+	counter++;
 	glBindFramebuffer(GL_FRAMEBUFFER, HDR);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -226,9 +228,26 @@ void AdvanceExample::Render(GLFWwindow* window, float deltaTime)
 
 		shaders[1].SetFloat("material.shininess", 64.0f);
 
+		if (counter < 800) 
+		{
+			diffuse.x -= 0.01f;
+			diffuse.y -= 0.01f;
+			diffuse.z -= 0.01f;
+		}
+		if (counter > 800 && counter < 1600) 
+		{
+			diffuse.x += 0.01f;
+			diffuse.y += 0.01f;
+			diffuse.z += 0.01f;
+		}
+		if (counter > 1600) 
+		{
+			counter = 0;
+		}
+
 		shaders[1].SetVec3("directionalLight.direction", -0.2f, -1.0f, -0.3f);
 		shaders[1].SetVec3("directionalLight.ambient", 0.1f, 0.1f, 0.1f);
-		shaders[1].SetVec3("directionalLight.diffuse", 2.0f, 2.0f, 2.0f);
+		shaders[1].SetVec3("directionalLight.diffuse", diffuse);
 		shaders[1].SetVec3("directionalLight.specular", 1.0f, 1.0f, 1.0f);
 
 		shaders[1].SetVec3("pointLight[0].position", pointLights[0].position);

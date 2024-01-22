@@ -15,8 +15,9 @@ class AdvanceExample:public GenericScene
 	private:
 		std::mt19937 generator; 
 		std::uniform_int_distribution<std::size_t> pathToFlowersAnimationDistribution;
+		glm::vec3 diffuse;
 		Object flowersModel[50], beesModel[1], hives[1];
-		int selectedFlowersModel[10], animationIndex, currentColorAnimationTime;
+		int selectedFlowersModel[10], animationIndex, currentColorAnimationTime, counter = 0;
 		InGameAnimation* pathToFlowers[50];
 		InGameAnimation* SunAndMoon;
 
