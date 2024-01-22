@@ -105,6 +105,13 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) 
 	{
+		double mouseX, mouseY;
+
+		glfwGetCursorPos(window, &mouseX, &mouseY);
+
+		sceneManager.scenes[sceneManager.ID]->mouseX = mouseX;
+		sceneManager.scenes[sceneManager.ID]->mouseY = mouseY;
+
 		sceneManager.ID = 0;
 		glfwSetCursorPos(window, 0, 0);
 		cursorPositionCallback(window, 0, 0);
@@ -172,10 +179,12 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 		if (buttons[i].state == HOVER && i == 0 && button == GLFW_MOUSE_BUTTON_LEFT)
 		{
 			sceneManager.ID = 1;
+			glfwSetCursorPos(window, sceneManager.scenes[sceneManager.ID]->mouseX, sceneManager.scenes[sceneManager.ID]->mouseY);
 		}
 		if (buttons[i].state == HOVER && i == 1 && button == GLFW_MOUSE_BUTTON_LEFT)
 		{
 			sceneManager.ID = 2;
+			glfwSetCursorPos(window, sceneManager.scenes[sceneManager.ID]->mouseX, sceneManager.scenes[sceneManager.ID]->mouseY);
 		}
 		if (buttons[i].state == HOVER && i == 2 && button == GLFW_MOUSE_BUTTON_LEFT)
 		{
