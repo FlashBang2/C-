@@ -15,114 +15,114 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="..\src\Animation.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="glad.c">
+    <ClCompile Include="..\src\Animator.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
+    <ClCompile Include="..\src\Bone.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="stb_image.cpp">
+    <ClCompile Include="..\src\Button.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="..\src\InGameAnimation.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
+    <ClCompile Include="..\src\Scenes\AdvanceExample.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
+    <ClCompile Include="..\src\Camera.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
+    <ClCompile Include="..\src\Scenes\Menu.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\Example.cpp">
+    <ClCompile Include="..\src\glad.c">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\Menu.cpp">
+    <ClCompile Include="..\src\main.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\AdvanceExample.cpp">
+    <ClCompile Include="..\src\Mesh.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
+    <ClCompile Include="..\src\Model.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Bone.cpp">
+    <ClCompile Include="..\src\Scenes\Example.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp">
+    <ClCompile Include="..\src\SceneManager.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Animator.cpp">
+    <ClCompile Include="..\src\Shader.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="InGameAnimation.cpp">
+    <ClCompile Include="..\src\stb_image.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\Mesh.vert" />
-    <None Include="Shaders\Mesh.frag" />
-    <None Include="Shaders\Light.vert" />
-    <None Include="Shaders\Light.frag" />
-    <None Include="Shaders\Cursor.vert" />
-    <None Include="Shaders\Cursor.frag" />
-    <None Include="Shaders\Button.vert" />
-    <None Include="Shaders\Button.frag" />
-    <None Include="Shaders\Text.vert" />
-    <None Include="Shaders\Text.frag" />
-    <None Include="Shaders\AnimatedMesh.vert" />
-    <None Include="Shaders\AnimatedMesh.frag" />
-    <None Include="Shaders\PostProcessing.frag" />
-    <None Include="Shaders\PostProcessing.vert" />
-    <None Include="Shaders\Blur.frag" />
-    <None Include="Shaders\Blur.vert" />
+    <None Include="..\src\Shaders\AnimatedMesh.frag" />
+    <None Include="..\src\Shaders\AnimatedMesh.vert" />
+    <None Include="..\src\Shaders\Blur.frag" />
+    <None Include="..\src\Shaders\Blur.vert" />
+    <None Include="..\src\Shaders\Button.frag" />
+    <None Include="..\src\Shaders\Button.vert" />
+    <None Include="..\src\Shaders\Cursor.frag" />
+    <None Include="..\src\Shaders\Cursor.vert" />
+    <None Include="..\src\Shaders\Light.frag" />
+    <None Include="..\src\Shaders\Light.vert" />
+    <None Include="..\src\Shaders\Mesh.frag" />
+    <None Include="..\src\Shaders\Mesh.vert" />
+    <None Include="..\src\Shaders\PostProcessing.frag" />
+    <None Include="..\src\Shaders\PostProcessing.vert" />
+    <None Include="..\src\Shaders\Text.frag" />
+    <None Include="..\src\Shaders\Text.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="..\src\Animation.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="..\src\Animator.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
+    <ClInclude Include="..\src\Bone.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
+    <ClInclude Include="..\src\Button.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="SceneManager.h">
+    <ClInclude Include="..\src\InGameAnimation.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\Example.h">
+    <ClInclude Include="..\src\Scenes\AdvanceExample.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\GenericScene.h">
+    <ClInclude Include="..\src\Camera.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\Menu.h">
+    <ClInclude Include="..\src\Scenes\Menu.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\AdvanceExample.h">
+    <ClInclude Include="..\src\Scenes\GenericScene.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h">
+    <ClInclude Include="..\src\Mesh.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Bone.h">
+    <ClInclude Include="..\src\Model.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
+    <ClInclude Include="..\src\Scenes\Example.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Animator.h">
+    <ClInclude Include="..\src\SceneManager.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="InGameAnimation.h">
+    <ClInclude Include="..\src\Shader.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>

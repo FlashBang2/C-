@@ -7,6 +7,7 @@ void Quit(GLFWwindow* window)
 
 SceneManager::SceneManager(GLuint currentScene)
 {
+
 	ID = currentScene;
 
 	Menu* menu = new Menu();

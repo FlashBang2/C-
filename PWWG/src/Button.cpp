@@ -5,7 +5,7 @@ Button::Button(glm::vec3 Position)
 	state = UNHOVER;
 	position = Position;
 	color = glm::vec3(0.5f, 0.5f, 0.5f);
-	buttonModel = Model("Models/Button/button.obj");
+	buttonModel = Model("../src/Models/Button/button.obj");
 
 	maxX = buttonModel.meshes[0].GetMaxPositionX();
 	minX = buttonModel.meshes[0].GetMinPositionX();

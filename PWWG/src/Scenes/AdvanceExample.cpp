@@ -57,22 +57,22 @@ AdvanceExample::AdvanceExample()
 	hives{{glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(-2.5f, 4.15f, -10.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}},
 	diffuse(2.0f, 2.0f, 2.0f)
 {
-	Shader animatedMesh("Shaders/AnimatedMesh.vert", "Shaders/AnimatedMesh.frag");
-	Shader mesh("Shaders/Mesh.vert", "Shaders/Mesh.frag");
-	Shader light("Shaders/Light.vert", "Shaders/Light.frag");
-	Shader postProcessing("Shaders/PostProcessing.vert", "Shaders/PostProcessing.frag");
-	Shader blur("Shaders/Blur.vert", "Shaders/Blur.frag");
+	Shader animatedMesh("../src/Shaders/AnimatedMesh.vert", "../src/Shaders/AnimatedMesh.frag");
+	Shader mesh("../src/Shaders/Mesh.vert", "../src/Shaders/Mesh.frag");
+	Shader light("../src/Shaders/Light.vert", "../src/Shaders/Light.frag");
+	Shader postProcessing("../src/Shaders/PostProcessing.vert", "../src/Shaders/PostProcessing.frag");
+	Shader blur("../src/Shaders/Blur.vert", "../src/Shaders/Blur.frag");
 
 	Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
-	Model bee("Models/Bee/bee.fbx");
-	Model tree("Models/Tree/tree.fbx");
-	Model ground("Models/Ground/ground.fbx");
-	Model hive("Models/Hive/hive.fbx");
-	Model flower("Models/Flower/flower.fbx");
-	Model sunAndMoon("Models/SunAndMoon/sunAndMoon.fbx");
+	Model bee("../src/Models/Bee/bee.fbx");
+	Model tree("../src/Models/Tree/tree.fbx");
+	Model ground("../src/Models/Ground/ground.fbx");
+	Model hive("../src/Models/Hive/hive.fbx");
+	Model flower("../src/Models/Flower/flower.fbx");
+	Model sunAndMoon("../src/Models/SunAndMoon/sunAndMoon.fbx");
 
-	Animation animation("Models/Bee/bee.fbx", &bee);
+	Animation animation("../src/Models/Bee/bee.fbx", &bee);
 
 	Animator animator(animation);
 

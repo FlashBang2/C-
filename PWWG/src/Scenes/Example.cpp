@@ -6,14 +6,14 @@ Example::Example()
 				  {glm::mat4(1.0f), 30.0f, glm::vec3(-3.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.8f, 0.8f, 0.8f)},
 				  {glm::mat4(1.0f), 0.0f, glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f)}}
 {
-	Shader shader("Shaders/Mesh.vert", "Shaders/Mesh.frag");
-	Shader light("Shaders/Light.vert", "Shaders/Light.frag");
-	Shader postProcessing("Shaders/PostProcessing.vert", "Shaders/PostProcessing.frag");
-	Shader blur("Shaders/Blur.vert", "Shaders/Blur.frag");
+	Shader shader("../src/Shaders/Mesh.vert", "../src/Shaders/Mesh.frag");
+	Shader light("../src/Shaders/Light.vert", "../src/Shaders/Light.frag");
+	Shader postProcessing("../src/Shaders/PostProcessing.vert", "../src/Shaders/PostProcessing.frag");
+	Shader blur("../src/Shaders/Blur.vert", "../src/Shaders/Blur.frag");
 
 	Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
-	Model box("Models/Box/box.obj");
+	Model box("../src/Models/Box/box.obj");
 
 	PointLight pointLight;
 

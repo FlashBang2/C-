@@ -11,8 +11,8 @@ void cursorPositionCallback(GLFWwindow* window, double posX, double PosY);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
-int main()
-{
+int main(int argc, char** argv, char** envp)
+{ 
 	glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

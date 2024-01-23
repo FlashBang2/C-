@@ -13,11 +13,11 @@ Menu::Menu()
 	buttons.push_back(buttonAdvanceExample);
 	buttons.push_back(buttonQuit);
 
-	Shader cursorShader("Shaders/Cursor.vert", "Shaders/Cursor.frag");
-	Shader buttonShader("Shaders/Button.vert", "Shaders/Button.frag");
-	Shader textShader("Shaders/Text.vert", "Shaders/Text.frag");
+	Shader cursorShader("../src/Shaders/Cursor.vert", "../src/Shaders/Cursor.frag");
+	Shader buttonShader("../src/Shaders/Button.vert", "../src/Shaders/Button.frag");
+	Shader textShader("../src/Shaders/Text.vert", "../src/Shaders/Text.frag");
 
-	Model cursorModel("Models/Cursor/cursor.obj");
+	Model cursorModel("../src/Models/Cursor/cursor.obj");
 
 	FT_Library ft;
 	if (FT_Init_FreeType(&ft))
@@ -27,7 +27,7 @@ Menu::Menu()
 	}
 
 	FT_Face face;
-	if (FT_New_Face(ft, "fonts/arial.ttf", 0, &face))
+	if (FT_New_Face(ft, "../src/fonts/arial.ttf", 0, &face))
 	{
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 		abort();

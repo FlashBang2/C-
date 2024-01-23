@@ -5,6 +5,8 @@
 #include"Scenes/Example.h"
 #include"Scenes/Menu.h"
 
+#include <sstream>
+
 class SceneManager
 {
 	public:
@@ -12,7 +14,14 @@ class SceneManager
 		GLuint ID;
 		int width = 1920, height = 1080;
 
-		SceneManager() {};
+		SceneManager() 
+		{
+			std::stringstream ss;
+			ss << "PATH=" << getenv("PATH");
+			ss << ";" << "C:\\Users\\Macon\\Documents\\Github\\Cpp\\PWWG\\src\\DLL";
+
+			_putenv_s("PATH", ss.str().c_str());
+		};
 		SceneManager(GLuint currentScene);
 
 		void Render(GLFWwindow* window, float deltaTime);
